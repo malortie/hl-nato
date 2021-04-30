@@ -22,7 +22,11 @@
 
 #define MAX_WEAPONS		32		// ???
 
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+#define MAX_WEAPON_SLOTS		6	// hud item selection slots
+#else
 #define MAX_WEAPON_SLOTS		5	// hud item selection slots
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 #define MAX_ITEM_TYPES			6	// hud item selection slots
 
 #define MAX_ITEMS				5	// hard coded item types

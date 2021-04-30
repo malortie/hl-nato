@@ -2058,6 +2058,39 @@ void CBaseMonster :: MonsterInitThink ( void )
 	StartMonster();
 }
 
+#if defined ( NOFFICE_DLL )
+void CBaseMonster :: StartPatrol ( CBaseEntity* path )
+{
+	m_pGoalEnt = path;
+
+	if ( !m_pGoalEnt )
+	{
+		ALERT(at_error, "ReadyMonster()--%s couldn't find target \"%s\"\n", STRING(pev->classname), STRING(pev->target));
+	}
+	else
+	{
+		// Monster will start turning towards his destination
+//		MakeIdealYaw ( m_pGoalEnt->pev->origin );
+
+		// set the monster up to walk a path corner path. 
+		// !!!BUGBUG - this is a minor bit of a hack.
+		// JAYJAY
+		m_movementGoal = MOVEGOAL_PATHCORNER;
+			
+		if ( pev->movetype == MOVETYPE_FLY )
+			m_movementActivity = ACT_FLY;
+		else
+			m_movementActivity = ACT_WALK;
+
+		if ( !FRefreshRoute() )
+		{
+			ALERT ( at_aiconsole, "Can't Create Route!\n" );
+		}
+		SetState( MONSTERSTATE_IDLE );
+		ChangeSchedule( GetScheduleOfType( SCHED_IDLE_WALK ) );
+	}
+}
+#endif // defined ( NOFFICE_DLL )
 //=========================================================
 // StartMonster - final bit of initization before a monster 
 // is turned over to the AI. 
@@ -2091,7 +2124,9 @@ void CBaseMonster :: StartMonster ( void )
 		if (!WALK_MOVE ( ENT(pev), 0, 0, WALKMOVE_NORMAL ) )
 		{
 			ALERT(at_error, "Monster %s stuck in wall--level design error", STRING(pev->classname));
+#if !defined ( NOFFICE_DLL )
 			pev->effects = EF_BRIGHTFIELD;
+#endif // !defined ( NOFFICE_DLL )
 		}
 	}
 	else 
@@ -2099,6 +2134,12 @@ void CBaseMonster :: StartMonster ( void )
 		pev->flags &= ~FL_ONGROUND;
 	}
 	
+#if defined ( NOFFICE_DLL )
+	if ( !FStringNull(pev->target) )// this monster has a target
+	{
+		StartPatrol(UTIL_FindEntityByTargetname( NULL, STRING( pev->target )));
+	}
+#else
 	if ( !FStringNull(pev->target) )// this monster has a target
 	{
 		// Find the monster's initial target entity, stash it
@@ -2140,6 +2181,7 @@ void CBaseMonster :: StartMonster ( void )
 			ChangeSchedule( GetScheduleOfType( SCHED_IDLE_WALK ) );
 		}
 	}
+#endif // defined ( NOFFICE_DLL )
 	
 	//SetState ( m_IdealMonsterState );
 	//SetActivity ( m_IdealActivity );

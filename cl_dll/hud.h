@@ -21,9 +21,16 @@
 //
 
 
+#if defined ( NOFFICE_CLIENT_DLL )
+#define RGB_YELLOWISH 0x00FFA000 //255,160,0
+#define RGB_REDISH 0x00800000 //128,0,0
+#define RGB_GREENISH 0x0000A000 //0,160,0
+#define RGB_WHITEISH 0x00FFFFFF //255,255,255
+#else
 #define RGB_YELLOWISH 0x00FFA000 //255,160,0
 #define RGB_REDISH 0x00FF1010 //255,160,0
 #define RGB_GREENISH 0x0000A000 //0,160,0
+#endif // defined ( NOFFICE_CLIENT_DLL )
 
 #ifndef _WIN32
 #define _cdecl 
@@ -533,6 +540,61 @@ private:
 	int 	m_nCompositeScore;
 };
 
+#if defined ( NOFFICE_CLIENT_DLL )
+//
+//-----------------------------------------------------
+//
+class CHudCinematic : public CHudBase
+{
+public:
+	int Init(void);
+	int VidInit(void);
+	int Draw(float flTime);
+	int MsgFunc_Cinematic(const char *pszName, int iSize, void *pbuf);
+
+	void DrawCinematic(void);
+
+private:
+	HSPRITE m_hSprite;
+
+	float m_flCineTime;
+};
+
+//
+//-----------------------------------------------------
+//
+class CHudGlow : public CHudBase
+{
+public:
+	int Init(void);
+	int VidInit(void);
+	int Draw(float flTime);
+	int MsgFunc_Glow(const char *pszName, int iSize, void *pbuf);
+
+	void DrawGlow(void);
+private:
+
+	HSPRITE m_hSprite;
+};
+
+
+//
+//-----------------------------------------------------
+//
+class CHudDeathVision : public CHudBase
+{
+public:
+	int Init(void);
+	int VidInit(void);
+	int Draw(float flTime);
+	int MsgFunc_DeathVision(const char *pszName, int iSize, void *pbuf);
+
+	void DrawDeathVision(void);
+private:
+
+	HSPRITE m_hSprite;
+};
+#endif // defined ( NOFFICE_CLIENT_DLL )
 //
 //-----------------------------------------------------
 //
@@ -565,6 +627,10 @@ public:
 	int		m_iRes;
 	cvar_t  *m_pCvarStealMouse;
 	cvar_t	*m_pCvarDraw;
+#if defined ( NOFFICE_CLIENT_DLL )
+	cvar_t  *m_pCvarNewHud;
+	cvar_t  *m_pCvarShowCrosshair;
+#endif // defined ( NOFFICE_CLIENT_DLL )
 
 	int m_iFontHeight;
 	int DrawHudNumber(int x, int y, int iFlags, int iNumber, int r, int g, int b );
@@ -611,6 +677,11 @@ public:
 	CHudTextMessage m_TextMessage;
 	CHudStatusIcons m_StatusIcons;
 	CHudBenchmark	m_Benchmark;
+#if defined ( NOFFICE_CLIENT_DLL )
+	CHudCinematic	m_Cinematic;
+	CHudGlow		m_Glow;
+	CHudDeathVision	m_DeathVision;
+#endif // defined ( NOFFICE_CLIENT_DLL )
 
 	void Init( void );
 	void VidInit( void );

@@ -25,6 +25,7 @@
 
 
 
+#if !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 
 enum rpg_e {
 	RPG_IDLE = 0,
@@ -41,6 +42,7 @@ enum rpg_e {
 
 LINK_ENTITY_TO_CLASS( weapon_rpg, CRpg );
 
+#endif // !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 #ifndef CLIENT_DLL
 
 LINK_ENTITY_TO_CLASS( laser_spot, CLaserSpot );
@@ -281,6 +283,7 @@ void CRpgRocket :: FollowThink( void  )
 #endif
 
 
+#if !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 
 void CRpg::Reload( void )
 {
@@ -614,4 +617,5 @@ class CRpgAmmo : public CBasePlayerAmmo
 };
 LINK_ENTITY_TO_CLASS( ammo_rpgclip, CRpgAmmo );
 
+#endif // !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 #endif

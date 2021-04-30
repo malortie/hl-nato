@@ -1344,6 +1344,7 @@ void CSprite::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useTy
 }
 
 
+#if !defined ( NOFFICE_DLL )
 class CGibShooter : public CBaseDelay
 {
 public:
@@ -1367,6 +1368,7 @@ public:
 	float m_flVariance;
 	float m_flGibLife;
 };
+#endif // !defined ( NOFFICE_DLL )
 
 TYPEDESCRIPTION CGibShooter::m_SaveData[] =
 {
@@ -1523,6 +1525,7 @@ void CGibShooter :: ShootThink ( void )
 }
 
 
+#if !defined ( NOFFICE_DLL )
 class CEnvShooter : public CGibShooter
 {
 	void		Precache( void );
@@ -1530,6 +1533,7 @@ class CEnvShooter : public CGibShooter
 
 	CGib		*CreateGib( void );
 };
+#endif // !defined ( NOFFICE_DLL )
 
 LINK_ENTITY_TO_CLASS( env_shooter, CEnvShooter );
 
@@ -1832,6 +1836,7 @@ void CBlood::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useTyp
 
 
 // Screen shake
+#if !defined ( NOFFICE_DLL )
 class CShake : public CPointEntity
 {
 public:
@@ -1850,6 +1855,7 @@ public:
 	inline	void	SetRadius( float radius ) { pev->dmg = radius; }
 private:
 };
+#endif // !defined ( NOFFICE_DLL )
 
 LINK_ENTITY_TO_CLASS( env_shake, CShake );
 

@@ -27,6 +27,9 @@
 #include	"scripted.h"
 #include	"weapons.h"
 #include	"soundent.h"
+#if defined ( NOFFICE_DLL )
+#include	"barney.h"
+#endif // defined ( NOFFICE_DLL )
 
 //=========================================================
 // Monster's Anim Events Go Here
@@ -40,6 +43,7 @@
 #define	BARNEY_BODY_GUNDRAWN		1
 #define BARNEY_BODY_GUNGONE			2
 
+#if !defined ( NOFFICE_DLL )
 class CBarney : public CTalkMonster
 {
 public:
@@ -87,6 +91,7 @@ public:
 
 	CUSTOM_SCHEDULES;
 };
+#endif // !defined ( NOFFICE_DLL )
 
 LINK_ENTITY_TO_CLASS( monster_barney, CBarney );
 

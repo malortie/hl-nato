@@ -52,6 +52,14 @@ int   g_irunninggausspred = 0;
 vec3_t previousorigin;
 
 // HLDM Weapon placeholder entities.
+#if defined ( NOFFICE_CLIENT_DLL )
+CHolster g_Holster;
+CTorch g_Torch;
+CGlock g_Glock;
+CCrowbar g_Crowbar;
+CMP5 g_Mp5;
+CShotgun g_Shotgun;
+#else
 CGlock g_Glock;
 CCrowbar g_Crowbar;
 CPython g_Python;
@@ -66,6 +74,7 @@ CHandGrenade g_HandGren;
 CSatchel g_Satchel;
 CTripmine g_Tripmine;
 CSqueak g_Snark;
+#endif // defined ( NOFFICE_CLIENT_DLL )
 
 
 /*
@@ -605,6 +614,14 @@ void HUD_InitClientWeapons( void )
 	HUD_PrepEntity( &player		, NULL );
 
 	// Allocate slot(s) for each weapon that we are going to be predicting
+#if defined ( NOFFICE_CLIENT_DLL )
+	HUD_PrepEntity( &g_Holster	, &player );
+	HUD_PrepEntity( &g_Torch	, &player );
+	HUD_PrepEntity( &g_Glock	, &player );
+	HUD_PrepEntity( &g_Crowbar	, &player );
+	HUD_PrepEntity( &g_Mp5	, &player );
+	HUD_PrepEntity( &g_Shotgun	, &player );
+#else
 	HUD_PrepEntity( &g_Glock	, &player );
 	HUD_PrepEntity( &g_Crowbar	, &player );
 	HUD_PrepEntity( &g_Python	, &player );
@@ -619,6 +636,7 @@ void HUD_InitClientWeapons( void )
 	HUD_PrepEntity( &g_Satchel	, &player );
 	HUD_PrepEntity( &g_Tripmine	, &player );
 	HUD_PrepEntity( &g_Snark	, &player );
+#endif // defined ( NOFFICE_CLIENT_DLL )
 }
 
 /*
@@ -684,6 +702,31 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	// FIXME, make this a method in each weapon?  where you pass in an entity_state_t *?
 	switch ( from->client.m_iId )
 	{
+#if defined ( NOFFICE_CLIENT_DLL )
+		case WEAPON_HOLSTER:
+			pWeapon = &g_Holster;
+			break;
+
+		case WEAPON_TORCH:
+			pWeapon = &g_Torch;
+			break;
+
+		case WEAPON_CROWBAR:
+			pWeapon = &g_Crowbar;
+			break;
+
+		case WEAPON_GLOCK:
+			pWeapon = &g_Glock;
+			break;
+
+		case WEAPON_MP5:
+			pWeapon = &g_Mp5;
+			break;
+
+		case WEAPON_SHOTGUN:
+			pWeapon = &g_Shotgun;
+			break;
+#else
 		case WEAPON_CROWBAR:
 			pWeapon = &g_Crowbar;
 			break;
@@ -739,6 +782,7 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		case WEAPON_SNARK:
 			pWeapon = &g_Snark;
 			break;
+#endif // defined ( NOFFICE_CLIENT_DLL )
 	}
 
 	// Store pointer to our destination entity_state_t so we can get our origin, etc. from it
@@ -845,11 +889,18 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		player.m_pActiveItem = g_pWpns[ from->client.m_iId ];
 	}
 
+#if defined ( NOFFICE_CLIENT_DLL )
+	if (player.m_pActiveItem->m_iId == WEAPON_MP5)
+	{
+		player.ammo_ak47 =  (int)from->client.vuser2[ 1 ];
+	}
+#else
 	if ( player.m_pActiveItem->m_iId == WEAPON_RPG )
 	{
 		 ( ( CRpg * )player.m_pActiveItem)->m_fSpotActive = (int)from->client.vuser2[ 1 ];
 		 ( ( CRpg * )player.m_pActiveItem)->m_cActiveRockets = (int)from->client.vuser2[ 2 ];
 	}
+#endif // defined ( NOFFICE_CLIENT_DLL )
 	
 	// Don't go firing anything if we have died or are spectating
 	// Or if we don't have a weapon model deployed
@@ -913,11 +964,18 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	to->client.vuser2[0]				= player.ammo_hornets;
 	to->client.ammo_rockets				= player.ammo_rockets;
 
+#if defined ( NOFFICE_CLIENT_DLL )
+	if ( player.m_pActiveItem->m_iId == WEAPON_MP5 )
+	{
+		from->client.vuser2[ 1 ] = player.ammo_ak47;
+	}
+#else
 	if ( player.m_pActiveItem->m_iId == WEAPON_RPG )
 	{
 		 from->client.vuser2[ 1 ] = ( ( CRpg * )player.m_pActiveItem)->m_fSpotActive;
 		 from->client.vuser2[ 2 ] = ( ( CRpg * )player.m_pActiveItem)->m_cActiveRockets;
 	}
+#endif // defined ( NOFFICE_CLIENT_DLL )
 
 	// Make sure that weapon animation matches what the game .dll is telling us
 	//  over the wire ( fixes some animation glitches )
@@ -925,6 +983,7 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	{
 		int body = 2;
 
+#if !defined ( NOFFICE_CLIENT_DLL )
 		//Pop the model to body 0.
 		if ( pWeapon == &g_Tripmine )
 			 body = 0;
@@ -932,6 +991,7 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		//Show laser sight/scope combo
 		if ( pWeapon == &g_Python && bIsMultiplayer() )
 			 body = 1;
+#endif // !defined ( NOFFICE_CLIENT_DLL )
 		
 		// Force a fixed anim down to viewmodel
 		HUD_SendWeaponAnim( to->client.weaponanim, body, 1 );

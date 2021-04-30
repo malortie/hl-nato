@@ -188,10 +188,12 @@ class CItemSuit : public CItem
 		if ( pPlayer->pev->weapons & (1<<WEAPON_SUIT) )
 			return FALSE;
 
+#if !defined ( NOFFICE_DLL )
 		if ( pev->spawnflags & SF_SUIT_SHORTLOGON )
 			EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_A0");		// short version of suit logon,
 		else
 			EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_AAx");	// long version of suit logon
+#endif // !defined ( NOFFICE_DLL )
 
 		pPlayer->pev->weapons |= (1<<WEAPON_SUIT);
 		return TRUE;
@@ -287,12 +289,20 @@ class CItemSecurity : public CItem
 	void Spawn( void )
 	{ 
 		Precache( );
+#if defined ( NOFFICE_DLL )
+		SET_MODEL(ENT(pev), "models/w_keys.mdl");
+#else
 		SET_MODEL(ENT(pev), "models/w_security.mdl");
+#endif // defined ( NOFFICE_DLL )
 		CItem::Spawn( );
 	}
 	void Precache( void )
 	{
+#if defined ( NOFFICE_DLL )
+		PRECACHE_MODEL("models/w_keys.mdl");
+#else
 		PRECACHE_MODEL ("models/w_security.mdl");
+#endif // defined ( NOFFICE_DLL )
 	}
 	BOOL MyTouch( CBasePlayer *pPlayer )
 	{

@@ -215,6 +215,9 @@ void CGameEnd::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useT
 //	Flag: All players					SF_ENVTEXT_ALLPLAYERS
 //
 
+#if defined ( NOFFICE_DLL )
+extern int gmsgCinematic;
+#endif // defined ( NOFFICE_DLL )
 
 #define SF_ENVTEXT_ALLPLAYERS			0x0001
 
@@ -322,6 +325,14 @@ void CGameText::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE use
 	if ( !CanFireForActivator( pActivator ) )
 		return;
 
+#if defined ( NOFFICE_DLL )
+	if ( ( FStrEq(STRING(gpGlobals->mapname), "trn1") && FStrEq(STRING(pev->targetname), "6months") ) || // training level.
+		 ( FStrEq(STRING(gpGlobals->mapname), "f14") && FStrEq(STRING(pev->targetname), "present") ) )  // start level.
+	{
+		// Center text on cinematics.
+		m_textParms.x = m_textParms.y = -1;
+	}
+#endif //  defined ( NOFFICE_DLL )
 	if ( MessageToAll() )
 	{
 		UTIL_HudMessageAll( m_textParms, MessageGet() );

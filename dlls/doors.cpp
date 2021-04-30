@@ -275,6 +275,20 @@ LINK_ENTITY_TO_CLASS( func_door, CBaseDoor );
 //
 LINK_ENTITY_TO_CLASS( func_water, CBaseDoor );
 
+#if defined ( NOFFICE_DLL )
+// ==========================================
+// Code changes for- Night at the Office:
+// ==========================================
+//
+// -Entity: func_mist. A modified version of func_water,
+//  to be used for simulating a layer of dust hovering
+//  over the floor.
+
+//
+// func_mist - same as a door. 
+//
+LINK_ENTITY_TO_CLASS(func_mist, CBaseDoor);
+#endif //  defined ( NOFFICE_DLL )
 
 void CBaseDoor::Spawn( )
 {

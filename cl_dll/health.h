@@ -124,4 +124,21 @@ private:
 	int DrawDamage(float fTime);
 	void CalcDamageDirection(vec3_t vecFrom);
 	void UpdateTiles(float fTime, long bits);
+#if defined ( NOFFICE_CLIENT_DLL )
+public:
+
+	void DrawPain2(void);
+
+private:
+	HSPRITE m_hSprite1;
+	HSPRITE m_hSprite2;
+	wrect_t *m_prc1;
+	wrect_t *m_prc2;
+	int	  m_iHeight;		// width of the health innards
+
+	HSPRITE m_hPainFront;
+	HSPRITE m_hPainLeft;
+	HSPRITE m_hPainRight;
+	HSPRITE m_hPainRear;
+#endif // defined ( NOFFICE_CLIENT_DLL )
 };	

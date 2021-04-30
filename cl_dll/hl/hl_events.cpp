@@ -41,6 +41,10 @@ void EV_SnarkFire( struct event_args_s *args );
 
 
 void EV_TrainPitchAdjust( struct event_args_s *args );
+#if defined ( NOFFICE_CLIENT_DLL )
+void EV_Torch(struct event_args_s *args);
+void EV_FireShotGunX(struct event_args_s *args);
+#endif // defined ( NOFFICE_CLIENT_DLL )
 }
 
 /*
@@ -77,4 +81,8 @@ void Game_HookEvents( void )
 	gEngfuncs.pfnHookEvent( "events/firehornet.sc",				EV_HornetGunFire );
 	gEngfuncs.pfnHookEvent( "events/tripfire.sc",				EV_TripmineFire );
 	gEngfuncs.pfnHookEvent( "events/snarkfire.sc",				EV_SnarkFire );
+#if defined ( NOFFICE_CLIENT_DLL )
+	gEngfuncs.pfnHookEvent( "events/torch.sc",					EV_Torch );
+	gEngfuncs.pfnHookEvent( "events/shotgunx.sc",				EV_FireShotGunX );
+#endif // defined ( NOFFICE_CLIENT_DLL )
 }

@@ -287,6 +287,9 @@ void CBreakable::Precache( void )
 
     switch (m_Material) 
 	{
+#if defined ( NOFFICE_DLL )
+	default:
+#endif // defined ( NOFFICE_DLL )
 	case matWood:
 		pGibName = "models/woodgibs.mdl";
 		

@@ -352,6 +352,9 @@ public:
 	int ammo_uranium;
 	int ammo_hornets;
 	int ammo_argrens;
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	int ammo_ak47;
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	//Special stuff for grenades and satchels.
 	float m_flStartThrow;
 	float m_flReleaseThrow;
@@ -360,6 +363,9 @@ public:
 
 	enum EGON_FIRESTATE { FIRE_OFF, FIRE_CHARGE };
 	int m_fireState;
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	void MuzzleLight(Vector vecSrc, float flRadius, byte r, byte g, byte b, float flTime, float flDecay);
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 };
 
 

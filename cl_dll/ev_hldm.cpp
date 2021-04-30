@@ -74,6 +74,10 @@ void EV_SnarkFire( struct event_args_s *args  );
 
 
 void EV_TrainPitchAdjust( struct event_args_s *args );
+#if defined ( NOFFICE_CLIENT_DLL )
+void EV_Torch(struct event_args_s *args);
+void EV_FireShotGunX(struct event_args_s *args);
+#endif // defined ( NOFFICE_CLIENT_DLL )
 }
 
 #define VECTOR_CONE_1DEGREES Vector( 0.00873, 0.00873, 0.00873 )
@@ -572,7 +576,11 @@ void EV_FireShotGunDouble( event_args_t *args )
 	{
 		// Add muzzle flash to current weapon model
 		EV_MuzzleFlash();
+#if defined ( NOFFICE_CLIENT_DLL )
+		gEngfuncs.pEventAPI->EV_WeaponAnimation( SHOTGUN_FIRE, 2 );
+#else
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( SHOTGUN_FIRE2, 2 );
+#endif // defined ( NOFFICE_CLIENT_DLL )
 		V_PunchAxis( 0, -10.0 );
 	}
 
@@ -600,6 +608,38 @@ void EV_FireShotGunDouble( event_args_t *args )
 
 void EV_FireShotGunSingle( event_args_t *args )
 {
+#if defined ( NOFFICE_CLIENT_DLL )
+	int idx;
+	vec3_t origin;
+	vec3_t angles;
+	vec3_t velocity;
+	
+	vec3_t vecSrc, vecAiming;
+	vec3_t up, right, forward;
+
+	idx = args->entindex;
+	VectorCopy( args->origin, origin );
+	VectorCopy( args->angles, angles );
+	VectorCopy( args->velocity, velocity );
+
+	AngleVectors( angles, forward, right, up );
+
+	if ( EV_IsLocal( idx ) )
+	{
+		// Add muzzle flash to current weapon model
+		EV_MuzzleFlash();
+		gEngfuncs.pEventAPI->EV_WeaponAnimation( SHOTGUN_FIRE, 2 );
+
+		V_PunchAxis( 0, -5.0 );
+	}
+
+	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/sbarrel1.wav", gEngfuncs.pfnRandomFloat(0.95, 1.0), ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong( 0, 0x1f ) );
+
+	EV_GetGunPosition( args, vecSrc, origin );
+	VectorCopy( forward, vecAiming );
+
+	EV_HLDM_FireBullets( idx, forward, right, up, 6, vecSrc, vecAiming, 2048, BULLET_PLAYER_BUCKSHOT, 0, &tracerCount[idx-1], 0.08716, 0.08716 );
+#else
 	int idx;
 	vec3_t origin;
 	vec3_t angles;
@@ -648,6 +688,7 @@ void EV_FireShotGunSingle( event_args_t *args )
 	{
 		EV_HLDM_FireBullets( idx, forward, right, up, 6, vecSrc, vecAiming, 2048, BULLET_PLAYER_BUCKSHOT, 0, &tracerCount[idx-1], 0.08716, 0.08716 );
 	}
+#endif // defined ( NOFFICE_CLIENT_DLL )
 }
 //======================
 //	   SHOTGUN END
@@ -1123,6 +1164,15 @@ void EV_FireGauss( event_args_t *args )
 //======================
 
 enum crowbar_e {
+#if defined ( NOFFICE_CLIENT_DLL )
+	CROWBAR_IDLE = 0,
+	CROWBAR_DRAW,
+	CROWBAR_HOLSTER,
+	CROWBAR_AIM,
+	CROWBAR_HOLD,
+	CROWBAR_RELEASEHIT,
+	CROWBAR_RELEASEMISS,
+#else
 	CROWBAR_IDLE = 0,
 	CROWBAR_DRAW,
 	CROWBAR_HOLSTER,
@@ -1132,6 +1182,7 @@ enum crowbar_e {
 	CROWBAR_ATTACK2HIT,
 	CROWBAR_ATTACK3MISS,
 	CROWBAR_ATTACK3HIT
+#endif // defined ( NOFFICE_CLIENT_DLL )
 };
 
 int g_iSwing;
@@ -1153,6 +1204,9 @@ void EV_Crowbar( event_args_t *args )
 
 	if ( EV_IsLocal( idx ) )
 	{
+#if defined ( NOFFICE_CLIENT_DLL )
+		gEngfuncs.pEventAPI->EV_WeaponAnimation( CROWBAR_RELEASEMISS, 1 );
+#else
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( CROWBAR_ATTACK1MISS, 1 );
 
 		switch( (g_iSwing++) % 3 )
@@ -1164,6 +1218,7 @@ void EV_Crowbar( event_args_t *args )
 			case 2:
 				gEngfuncs.pEventAPI->EV_WeaponAnimation ( CROWBAR_ATTACK3MISS, 1 ); break;
 		}
+#endif // defined ( NOFFICE_CLIENT_DLL )
 	}
 }
 //======================
@@ -1702,3 +1757,96 @@ int EV_TFC_IsAllyTeam( int iTeam1, int iTeam2 )
 {
 	return 0;
 }
+
+#if defined ( NOFFICE_CLIENT_DLL )
+//======================
+//	   TORCH START
+//======================
+
+#define	SOUND_FLASHLIGHT_ON		"items/flashlight1.wav"
+#define	SOUND_FLASHLIGHT_OFF	"items/flashlight1.wav"
+
+enum torch_e {
+	TORCH_IDLE_OFF = 0,
+	TORCH_DRAW,
+	TORCH_IDLE_ON,
+	TORCH_SWITCH,
+	TORCH_HOLSTER_OFF,
+	TORCH_HOLSTER_ON,
+};
+
+void EV_Torch(struct event_args_s *args)
+{
+	int idx;
+	vec3_t origin;
+
+	int flashlightOn;
+
+	idx = args->entindex;
+
+	VectorCopy(args->origin, origin);
+
+	flashlightOn = args->bparam1;
+
+	//Only play the weapon anims if I shot it.
+	if (EV_IsLocal(idx))
+	{
+		gEngfuncs.pEventAPI->EV_WeaponAnimation(TORCH_SWITCH, 1);
+	}
+
+	if (flashlightOn)
+	{
+		// Play flashlight on sound.
+		gEngfuncs.pEventAPI->EV_PlaySound(idx, origin, CHAN_WEAPON, SOUND_FLASHLIGHT_ON, 1, ATTN_NORM, 0, 100);
+	}
+	else
+	{
+		// Play flashlight off sound.
+		gEngfuncs.pEventAPI->EV_PlaySound(idx, origin, CHAN_WEAPON, SOUND_FLASHLIGHT_OFF, 1, ATTN_NORM, 0, 100);
+	}
+}
+
+//======================
+//	   TORCH END
+//======================
+
+//======================
+//	  SHOTGUNX START
+//======================
+
+void EV_FireShotGunX(struct event_args_s *args)
+{
+	int idx;
+	vec3_t origin;
+	vec3_t angles;
+	vec3_t velocity;
+
+	vec3_t ShellVelocity;
+	vec3_t ShellOrigin;
+	int shell;
+	vec3_t up, right, forward;
+
+	idx = args->entindex;
+	VectorCopy(args->origin, origin);
+	VectorCopy(args->angles, angles);
+	VectorCopy(args->velocity, velocity);
+
+	AngleVectors(angles, forward, right, up);
+
+	//Only play the weapon anims if I shot it.
+	if ( EV_IsLocal( idx ) )
+	{
+		gEngfuncs.pEventAPI->EV_WeaponAnimation(SHOTGUN_EJECT, 1);
+	}
+
+	shell = gEngfuncs.pEventAPI->EV_FindModelIndex("models/shotgunshell.mdl");// brass shell
+
+	EV_GetDefaultShellInfo(args, origin, velocity, ShellVelocity, ShellOrigin, forward, right, up, 32, -12, 6);
+
+	EV_EjectBrass(ShellOrigin, ShellVelocity, angles[YAW], shell, TE_BOUNCE_SHOTSHELL);
+}
+
+//======================
+//	  SHOTGUNX END
+//======================
+#endif // defined ( NOFFICE_CLIENT_DLL )

@@ -331,6 +331,9 @@ public:
 	BOOL ExitScriptedSequence( );
 	BOOL CineCleanup( );
 
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	void StartPatrol( CBaseEntity *path );
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	CBaseEntity* DropItem ( char *pszItemName, const Vector &vecPos, const Vector &vecAng );// drop an item.
 };
 

@@ -272,6 +272,17 @@ int CHudAmmo::Init(void)
 	HOOK_MESSAGE(AmmoX);
 
 	HOOK_COMMAND("slot1", Slot1);
+#if defined ( NOFFICE_CLIENT_DLL )
+	HOOK_COMMAND("slot2", Slot1);
+	HOOK_COMMAND("slot3", Slot1);
+	HOOK_COMMAND("slot4", Slot1);
+	HOOK_COMMAND("slot5", Slot1);
+	HOOK_COMMAND("slot6", Slot1);
+	HOOK_COMMAND("slot7", Slot1);
+	HOOK_COMMAND("slot8", Slot1);
+	HOOK_COMMAND("slot9", Slot1);
+	HOOK_COMMAND("slot10", Slot1);
+#else
 	HOOK_COMMAND("slot2", Slot2);
 	HOOK_COMMAND("slot3", Slot3);
 	HOOK_COMMAND("slot4", Slot4);
@@ -281,6 +292,7 @@ int CHudAmmo::Init(void)
 	HOOK_COMMAND("slot8", Slot8);
 	HOOK_COMMAND("slot9", Slot9);
 	HOOK_COMMAND("slot10", Slot10);
+#endif // defined ( NOFFICE_CLIENT_DLL )
 	HOOK_COMMAND("cancelselect", Close);
 	HOOK_COMMAND("invnext", NextWeapon);
 	HOOK_COMMAND("invprev", PrevWeapon);
@@ -867,7 +879,11 @@ int CHudAmmo::Draw(float flTime)
 	if (m_fFade > 0)
 		m_fFade -= (gHUD.m_flTimeDelta * 20);
 
+#if defined ( NOFFICE_CLIENT_DLL )
+	UnpackRGB(r,g,b, RGB_WHITEISH);
+#else
 	UnpackRGB(r,g,b, RGB_YELLOWISH);
+#endif // defined ( NOFFICE_CLIENT_DLL )
 
 	ScaleColors(r, g, b, a );
 
@@ -896,7 +912,11 @@ int CHudAmmo::Draw(float flTime)
 
 			x += AmmoWidth/2;
 
+#if defined ( NOFFICE_CLIENT_DLL )
+			UnpackRGB(r, g, b, RGB_WHITEISH);
+#else
 			UnpackRGB(r,g,b, RGB_YELLOWISH);
+#endif // defined ( NOFFICE_CLIENT_DLL )
 
 			// draw the | bar
 			FillRGBA(x, y, iBarWidth, gHUD.m_iFontHeight, r, g, b, a);
@@ -916,10 +936,20 @@ int CHudAmmo::Draw(float flTime)
 			x = gHUD.DrawHudNumber(x, y, iFlags | DHN_3DIGITS, gWR.CountAmmo(pw->iAmmoType), r, g, b);
 		}
 
+#if defined ( NOFFICE_CLIENT_DLL )
+		UnpackRGB(r, g, b, RGB_WHITEISH);
+		ScaleColors(r, g, b, 128);
+
 		// Draw the ammo Icon
 		int iOffset = (m_pWeapon->rcAmmo.bottom - m_pWeapon->rcAmmo.top)/8;
 		SPR_Set(m_pWeapon->hAmmo, r, g, b);
+		SPR_DrawHoles(0, x, y - iOffset, &m_pWeapon->rcAmmo);
+#else
+		// Draw the ammo Icon
+		int iOffset = (m_pWeapon->rcAmmo.bottom - m_pWeapon->rcAmmo.top) / 8;
+		SPR_Set(m_pWeapon->hAmmo, r, g, b);
 		SPR_DrawAdditive(0, x, y - iOffset, &m_pWeapon->rcAmmo);
+#endif // defined ( NOFFICE_CLIENT_DLL )
 	}
 
 	// Does weapon have seconday ammo?
@@ -934,10 +964,20 @@ int CHudAmmo::Draw(float flTime)
 			x = ScreenWidth - 4 * AmmoWidth - iIconWidth;
 			x = gHUD.DrawHudNumber(x, y, iFlags|DHN_3DIGITS, gWR.CountAmmo(pw->iAmmo2Type), r, g, b);
 
+#if defined ( NOFFICE_CLIENT_DLL )
+			UnpackRGB(r,g,b, RGB_WHITEISH);
+			ScaleColors(r, g, b, 128);
+
 			// Draw the ammo Icon
 			SPR_Set(m_pWeapon->hAmmo2, r, g, b);
 			int iOffset = (m_pWeapon->rcAmmo2.bottom - m_pWeapon->rcAmmo2.top)/8;
+			SPR_DrawHoles(0, x, y - iOffset, &m_pWeapon->rcAmmo2);
+#else
+			// Draw the ammo Icon
+			SPR_Set(m_pWeapon->hAmmo2, r, g, b);
+			int iOffset = (m_pWeapon->rcAmmo2.bottom - m_pWeapon->rcAmmo2.top) / 8;
 			SPR_DrawAdditive(0, x, y - iOffset, &m_pWeapon->rcAmmo2);
+#endif // defined ( NOFFICE_CLIENT_DLL )
 		}
 	}
 	return 1;
@@ -1045,7 +1085,11 @@ int CHudAmmo::DrawWList(float flTime)
 	{
 		int iWidth;
 
+#if defined ( NOFFICE_CLIENT_DLL )
+		UnpackRGB(r,g,b, RGB_WHITEISH);
+#else
 		UnpackRGB(r,g,b, RGB_YELLOWISH);
+#endif // defined ( NOFFICE_CLIENT_DLL )
 	
 		if ( iActiveSlot == i )
 			a = 255;
@@ -1097,22 +1141,45 @@ int CHudAmmo::DrawWList(float flTime)
 				if ( !p || !p->iId )
 					continue;
 
+#if defined ( NOFFICE_CLIENT_DLL )
+				UnpackRGB(r, g, b, RGB_WHITEISH);
+#else
 				UnpackRGB( r,g,b, RGB_YELLOWISH );
+#endif // defined ( NOFFICE_CLIENT_DLL )
 			
 				// if active, then we must have ammo.
 
 				if ( gpActiveSel == p )
 				{
+#if defined ( NOFFICE_CLIENT_DLL )
+					SPR_Set(p->hActive, r, g, b );
+					SPR_Draw(0, x, y, &p->rcActive);
+
+					SPR_Set(gHUD.GetSprite(m_HUD_selection), r, g, b );
+					SPR_Draw(0, x, y, &gHUD.GetSpriteRect(m_HUD_selection));
+#else
 					SPR_Set(p->hActive, r, g, b );
 					SPR_DrawAdditive(0, x, y, &p->rcActive);
 
 					SPR_Set(gHUD.GetSprite(m_HUD_selection), r, g, b );
 					SPR_DrawAdditive(0, x, y, &gHUD.GetSpriteRect(m_HUD_selection));
+#endif // defined ( NOFFICE_CLIENT_DLL )
 				}
 				else
 				{
 					// Draw Weapon if Red if no ammo
+#if defined ( NOFFICE_CLIENT_DLL )
+					if ( gWR.HasAmmo(p) )
+						ScaleColors(r, g, b, 255);
+					else
+					{
+						UnpackRGB(r,g,b, RGB_REDISH);
+						ScaleColors(r, g, b, 255);
+					}
 
+					SPR_Set( p->hInactive, r, g, b );
+					SPR_Draw( 0, x, y, &p->rcInactive );
+#else
 					if ( gWR.HasAmmo(p) )
 						ScaleColors(r, g, b, 192);
 					else
@@ -1123,11 +1190,14 @@ int CHudAmmo::DrawWList(float flTime)
 
 					SPR_Set( p->hInactive, r, g, b );
 					SPR_DrawAdditive( 0, x, y, &p->rcInactive );
+#endif // defined ( NOFFICE_CLIENT_DLL )
 				}
 
+#if !defined ( NOFFICE_CLIENT_DLL )
 				// Draw Ammo Bar
 
 				DrawAmmoBar(p, x + giABWidth/2, y, giABWidth, giABHeight);
+#endif // !defined ( NOFFICE_CLIENT_DLL )
 				
 				y += p->rcActive.bottom - p->rcActive.top + 5;
 			}
@@ -1139,7 +1209,11 @@ int CHudAmmo::DrawWList(float flTime)
 		{
 			// Draw Row of weapons.
 
+#if defined ( NOFFICE_CLIENT_DLL )
+			UnpackRGB(r,g,b, RGB_WHITEISH);
+#else
 			UnpackRGB(r,g,b, RGB_YELLOWISH);
+#endif // defined ( NOFFICE_CLIENT_DLL )
 
 			for ( int iPos = 0; iPos < MAX_WEAPON_POSITIONS; iPos++ )
 			{

@@ -41,6 +41,9 @@
 #include	"soundent.h"
 #include	"effects.h"
 #include	"customentity.h"
+#if defined ( NOFFICE_DLL )
+#include	"hgrunt.h"
+#endif // defined ( NOFFICE_DLL )
 
 int g_fGruntQuestion;				// true if an idle grunt asked a question. Cleared when someone answers.
 
@@ -87,6 +90,7 @@ extern DLL_GLOBAL int		g_iSkillLevel;
 #define		HGRUNT_AE_CAUGHT_ENEMY	( 10) // grunt established sight with an enemy (player only) that had previously eluded the squad.
 #define		HGRUNT_AE_DROP_GUN		( 11) // grunt (probably dead) is dropping his mp5.
 
+#if !defined ( NOFFICE_DLL )
 //=========================================================
 // monster-specific schedule types
 //=========================================================
@@ -115,11 +119,13 @@ enum
 	TASK_GRUNT_CHECK_FIRE,
 };
 
+#endif // !defined ( NOFFICE_DLL )
 //=========================================================
 // monster-specific conditions
 //=========================================================
 #define bits_COND_GRUNT_NOFIRE	( bits_COND_SPECIAL1 )
 
+#if !defined ( NOFFICE_DLL )
 class CHGrunt : public CSquadMonster
 {
 public:
@@ -186,6 +192,7 @@ public:
 
 	static const char *pGruntSentences[];
 };
+#endif // !defined ( NOFFICE_DLL )
 
 LINK_ENTITY_TO_CLASS( monster_human_grunt, CHGrunt );
 
@@ -2434,6 +2441,7 @@ void CHGruntRepel::RepelUse ( CBaseEntity *pActivator, CBaseEntity *pCaller, USE
 //=========================================================
 // DEAD HGRUNT PROP
 //=========================================================
+#if !defined ( NOFFICE_DLL )
 class CDeadHGrunt : public CBaseMonster
 {
 public:
@@ -2445,6 +2453,7 @@ public:
 	int	m_iPose;// which sequence to display	-- temporary, don't need to save
 	static char *m_szPoses[3];
 };
+#endif // !defined ( NOFFICE_DLL )
 
 char *CDeadHGrunt::m_szPoses[] = { "deadstomach", "deadside", "deadsitting" };
 

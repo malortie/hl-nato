@@ -221,8 +221,10 @@ void CTripmineGrenade :: PowerupThink( void  )
 
 		MakeBeam( );
 
+#if !defined ( NOFFICE_DLL )
 		// play enabled sound
         EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "weapons/mine_activate.wav", 0.5, ATTN_NORM, 1.0, 75 );
+#endif // !defined ( NOFFICE_DLL )
 	}
 	pev->nextthink = gpGlobals->time + 0.1;
 }
@@ -258,7 +260,11 @@ void CTripmineGrenade :: MakeBeam( void )
 	m_pBeam->PointEntInit( vecTmpEnd, entindex() );
 	m_pBeam->SetColor( 0, 214, 198 );
 	m_pBeam->SetScrollRate( 255 );
+#if defined ( NOFFICE_DLL )
+	m_pBeam->SetBrightness( 0 );
+#else
 	m_pBeam->SetBrightness( 64 );
+#endif // defined ( NOFFICE_DLL )
 }
 
 
@@ -352,6 +358,7 @@ void CTripmineGrenade::DelayDeathThink( void )
 }
 #endif
 
+#if !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 LINK_ENTITY_TO_CLASS( weapon_tripmine, CTripmine );
 
 void CTripmine::Spawn( )
@@ -521,6 +528,7 @@ void CTripmine::WeaponIdle( void )
 	SendWeaponAnim( iAnim );
 }
 
+#endif // !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 
 
 

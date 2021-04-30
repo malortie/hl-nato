@@ -45,7 +45,24 @@ void CGlock::Spawn( )
 	m_iId = WEAPON_GLOCK;
 	SET_MODEL(ENT(pev), "models/w_9mmhandgun.mdl");
 
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	SetClipModel("models/w_9mmclip.mdl");
+
+	// ==========================================
+	// Code changes for- Night at the Office:
+	// ==========================================
+	//
+	// -Randomised Ammo. Picking up a gun from a fallen terrorist 
+	//  will not give you a pre-defined amount of bullets. The exact 
+	//  number is random (depending on the gun and clip size), which 
+	//  means the player will constantly need to keep a check on the 
+	//  ammo as it will no longer be 'comfortable' for the player to 
+	//  waste ammo.
+
+	m_iDefaultAmmo = DefaultAmmoBySkill(GLOCK_MAX_CLIP, gSkillData.iSkillLevel);
+#else
 	m_iDefaultAmmo = GLOCK_DEFAULT_GIVE;
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 
 	FallInit();// get ready to fall down.
 }
@@ -78,8 +95,13 @@ int CGlock::GetItemInfo(ItemInfo *p)
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = -1;
 	p->iMaxClip = GLOCK_MAX_CLIP;
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	p->iSlot = 0;
+	p->iPosition = 3;
+#else
 	p->iSlot = 1;
 	p->iPosition = 0;
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	p->iFlags = 0;
 	p->iId = m_iId = WEAPON_GLOCK;
 	p->iWeight = GLOCK_WEIGHT;
@@ -89,22 +111,71 @@ int CGlock::GetItemInfo(ItemInfo *p)
 
 BOOL CGlock::Deploy( )
 {
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	BOOL bResult = DefaultDeploy("models/v_9mmhandgun.mdl", "models/p_9mmhandgun.mdl", GLOCK_DRAW, "onehanded", /*UseDecrement() ? 1 : 0*/ 0);
+
+	if (bResult)
+	{
+		m_fInAttack = 0;
+	}
+
+	return bResult;
+#else
 	// pev->body = 1;
 	return DefaultDeploy( "models/v_9mmhandgun.mdl", "models/p_9mmhandgun.mdl", GLOCK_DRAW, "onehanded", /*UseDecrement() ? 1 : 0*/ 0 );
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 }
 
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+void CGlock::Holster(int skiplocal /*= 0*/)
+{
+	m_fInReload = FALSE;// cancel any reload in progress.
+
+	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.5;
+	SendWeaponAnim(GLOCK_HOLSTER);
+
+	m_fInAttack = 0;
+}
+#endif // defined ( EFTD_DLL ) || defined ( EFTD_CLIENT_DLL )
 void CGlock::SecondaryAttack( void )
 {
+#if !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 	GlockFire( 0.1, 0.2, FALSE );
+#endif // !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 }
 
 void CGlock::PrimaryAttack( void )
 {
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	GlockFire( 0.01, 0.2, TRUE );
+#else
 	GlockFire( 0.01, 0.3, TRUE );
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 }
 
 void CGlock::GlockFire( float flSpread , float flCycleTime, BOOL fUseAutoAim )
 {
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	// Do not allow attack unless primary attack key was released.
+	if (m_fInAttack)
+		return;
+
+	if (m_iClip <= 0)
+	{
+		if (!m_fFireOnEmpty)
+			Reload( );
+		else
+		{
+			EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/357_cock1.wav", 0.8, ATTN_NORM);
+			m_flNextPrimaryAttack = GetNextAttackDelay(0.2);
+		}
+
+		return;
+	}
+
+	// Prevent from continuously refire.
+	m_fInAttack = 1;
+#else
 	if (m_iClip <= 0)
 	{
 		if (m_fFireOnEmpty)
@@ -115,6 +186,7 @@ void CGlock::GlockFire( float flSpread , float flCycleTime, BOOL fUseAutoAim )
 
 		return;
 	}
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 
 	m_iClip--;
 
@@ -186,6 +258,10 @@ void CGlock::Reload( void )
 	if (iResult)
 	{
 		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UTIL_SharedRandomFloat( m_pPlayer->random_seed, 10, 15 );
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+		// Unblock primary attack.
+		m_fInAttack = 0;
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	}
 }
 
@@ -197,6 +273,13 @@ void CGlock::WeaponIdle( void )
 
 	m_pPlayer->GetAutoaimVector( AUTOAIM_10DEGREES );
 
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	//
+	// Unblock primary attack.
+	// This will only occur if players released primary attack key.
+	//
+	m_fInAttack = 0;
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	if ( m_flTimeWeaponIdle > UTIL_WeaponTimeBase() )
 		return;
 

@@ -52,10 +52,30 @@ void CMP5::Spawn( )
 {
 	pev->classname = MAKE_STRING("weapon_9mmAR"); // hack to allow for old names
 	Precache( );
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	SET_MODEL(ENT(pev), "models/w_AK47.mdl");
+	SetClipModel( "models/w_akclip.mdl" );
+
+	m_iId = WEAPON_MP5;
+
+	// ==========================================
+	// Code changes for- Night at the Office:
+	// ==========================================
+	//
+	// -Randomised Ammo. Picking up a gun from a fallen terrorist 
+	//  will not give you a pre-defined amount of bullets. The exact 
+	//  number is random (depending on the gun and clip size), which 
+	//  means the player will constantly need to keep a check on the 
+	//  ammo as it will no longer be 'comfortable' for the player to 
+	//  waste ammo.
+
+	m_iDefaultAmmo = DefaultAmmoBySkill(MP5_MAX_CLIP, gSkillData.iSkillLevel);
+#else
 	SET_MODEL(ENT(pev), "models/w_9mmAR.mdl");
 	m_iId = WEAPON_MP5;
 
 	m_iDefaultAmmo = MP5_DEFAULT_GIVE;
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 
 	FallInit();// get ready to fall down.
 }
@@ -63,15 +83,25 @@ void CMP5::Spawn( )
 
 void CMP5::Precache( void )
 {
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	PRECACHE_MODEL("models/v_AK47.mdl");
+	PRECACHE_MODEL("models/w_AK47.mdl");
+	PRECACHE_MODEL("models/p_AK47.mdl");
+#else
 	PRECACHE_MODEL("models/v_9mmAR.mdl");
 	PRECACHE_MODEL("models/w_9mmAR.mdl");
 	PRECACHE_MODEL("models/p_9mmAR.mdl");
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 
 	m_iShell = PRECACHE_MODEL ("models/shell.mdl");// brass shellTE_MODEL
 
 	PRECACHE_MODEL("models/grenade.mdl");	// grenade
 
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	PRECACHE_MODEL("models/w_akclip.mdl");
+#else
 	PRECACHE_MODEL("models/w_9mmARclip.mdl");
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	PRECACHE_SOUND("items/9mmclip1.wav");              
 
 	PRECACHE_SOUND("items/clipinsert1.wav");
@@ -92,6 +122,19 @@ void CMP5::Precache( void )
 
 int CMP5::GetItemInfo(ItemInfo *p)
 {
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	p->pszName = STRING(pev->classname);
+	p->pszAmmo1 = "ak47";
+	p->iMaxAmmo1 = AK47_MAX_CARRY;
+	p->pszAmmo2 = NULL;
+	p->iMaxAmmo2 = -1;
+	p->iMaxClip = MP5_MAX_CLIP;
+	p->iSlot = 0;
+	p->iPosition = 4;
+	p->iFlags = 0;
+	p->iId = m_iId = WEAPON_MP5;
+	p->iWeight = MP5_WEIGHT;
+#else
 	p->pszName = STRING(pev->classname);
 	p->pszAmmo1 = "9mm";
 	p->iMaxAmmo1 = _9MM_MAX_CARRY;
@@ -103,6 +146,7 @@ int CMP5::GetItemInfo(ItemInfo *p)
 	p->iFlags = 0;
 	p->iId = m_iId = WEAPON_MP5;
 	p->iWeight = MP5_WEIGHT;
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 
 	return 1;
 }
@@ -121,7 +165,11 @@ int CMP5::AddToPlayer( CBasePlayer *pPlayer )
 
 BOOL CMP5::Deploy( )
 {
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	return DefaultDeploy( "models/v_AK47.mdl", "models/p_AK47.mdl", MP5_DEPLOY, "mp5" );
+#else
 	return DefaultDeploy( "models/v_9mmAR.mdl", "models/p_9mmAR.mdl", MP5_DEPLOY, "mp5" );
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 }
 
 
@@ -197,6 +245,7 @@ void CMP5::PrimaryAttack()
 
 void CMP5::SecondaryAttack( void )
 {
+#if !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 	// don't fire underwater
 	if (m_pPlayer->pev->waterlevel == 3)
 	{
@@ -245,12 +294,18 @@ void CMP5::SecondaryAttack( void )
 	if (!m_pPlayer->m_rgAmmo[m_iSecondaryAmmoType])
 		// HEV suit - indicate out of ammo condition
 		m_pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
+#endif // !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 }
 
 void CMP5::Reload( void )
 {
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	if ( m_pPlayer->ammo_ak47 <= 0 )
+		return;
+#else
 	if ( m_pPlayer->ammo_9mm <= 0 )
 		return;
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 
 	DefaultReload( MP5_MAX_CLIP, MP5_RELOAD, 1.5 );
 }
@@ -290,17 +345,29 @@ class CMP5AmmoClip : public CBasePlayerAmmo
 	void Spawn( void )
 	{ 
 		Precache( );
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+		SET_MODEL(ENT(pev), "models/w_akclip.mdl");
+#else
 		SET_MODEL(ENT(pev), "models/w_9mmARclip.mdl");
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 		CBasePlayerAmmo::Spawn( );
 	}
 	void Precache( void )
 	{
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+		PRECACHE_MODEL ("models/w_akclip.mdl");
+#else
 		PRECACHE_MODEL ("models/w_9mmARclip.mdl");
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 		PRECACHE_SOUND("items/9mmclip1.wav");
 	}
 	BOOL AddAmmo( CBaseEntity *pOther ) 
 	{ 
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+		int bResult = (pOther->GiveAmmo( AMMO_MP5CLIP_GIVE, "ak47", AK47_MAX_CARRY) != -1);
+#else
 		int bResult = (pOther->GiveAmmo( AMMO_MP5CLIP_GIVE, "9mm", _9MM_MAX_CARRY) != -1);
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 		if (bResult)
 		{
 			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
@@ -313,6 +380,7 @@ LINK_ENTITY_TO_CLASS( ammo_9mmAR, CMP5AmmoClip );
 
 
 
+#if !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 class CMP5Chainammo : public CBasePlayerAmmo
 {
 	void Spawn( void )
@@ -366,6 +434,7 @@ class CMP5AmmoGrenade : public CBasePlayerAmmo
 LINK_ENTITY_TO_CLASS( ammo_mp5grenades, CMP5AmmoGrenade );
 LINK_ENTITY_TO_CLASS( ammo_ARgrenades, CMP5AmmoGrenade );
 
+#endif // !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 
 
 

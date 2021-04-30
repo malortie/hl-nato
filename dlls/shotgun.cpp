@@ -27,6 +27,19 @@
 #define VECTOR_CONE_DM_DOUBLESHOTGUN Vector( 0.17365, 0.04362, 0.00 ) // 20 degrees by 5 degrees
 
 enum shotgun_e {
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	SHOTGUN_IDLE = 0,
+	SHOTGUN_FIRE,
+	SHOTGUN_EJECT,
+	SHOTGUN_SHOOT_BIG,
+	SHOTGUN_RELOAD,
+	SHOTGUN_PUMP,
+	SHOTGUN_START_RELOAD,
+	SHOTGUN_DRAW,
+	SHOTGUN_HOLSTER,
+	SHOTGUN_IDLE4,
+	SHOTGUN_IDLE_DEEP
+#else
 	SHOTGUN_IDLE = 0,
 	SHOTGUN_FIRE,
 	SHOTGUN_FIRE2,
@@ -37,6 +50,7 @@ enum shotgun_e {
 	SHOTGUN_HOLSTER,
 	SHOTGUN_IDLE4,
 	SHOTGUN_IDLE_DEEP
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 };
 
 LINK_ENTITY_TO_CLASS( weapon_shotgun, CShotgun );
@@ -47,7 +61,22 @@ void CShotgun::Spawn( )
 	m_iId = WEAPON_SHOTGUN;
 	SET_MODEL(ENT(pev), "models/w_shotgun.mdl");
 
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	// ==========================================
+	// Code changes for- Night at the Office:
+	// ==========================================
+	//
+	// -Randomised Ammo. Picking up a gun from a fallen terrorist 
+	//  will not give you a pre-defined amount of bullets. The exact 
+	//  number is random (depending on the gun and clip size), which 
+	//  means the player will constantly need to keep a check on the 
+	//  ammo as it will no longer be 'comfortable' for the player to 
+	//  waste ammo.
+
+	m_iDefaultAmmo = DefaultAmmoBySkill( SHOTGUN_MAX_CLIP, gSkillData.iSkillLevel );
+#else
 	m_iDefaultAmmo = SHOTGUN_DEFAULT_GIVE;
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 
 	FallInit();// get ready to fall
 }
@@ -77,6 +106,9 @@ void CShotgun::Precache( void )
 
 	m_usSingleFire = PRECACHE_EVENT( 1, "events/shotgun1.sc" );
 	m_usDoubleFire = PRECACHE_EVENT( 1, "events/shotgun2.sc" );
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	m_usEject = PRECACHE_EVENT(1, "events/shotgunx.sc");
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 }
 
 int CShotgun::AddToPlayer( CBasePlayer *pPlayer )
@@ -100,8 +132,13 @@ int CShotgun::GetItemInfo(ItemInfo *p)
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = -1;
 	p->iMaxClip = SHOTGUN_MAX_CLIP;
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	p->iSlot = 0;
+	p->iPosition = 5;
+#else
 	p->iSlot = 2;
 	p->iPosition = 1;
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	p->iFlags = 0;
 	p->iId = m_iId = WEAPON_SHOTGUN;
 	p->iWeight = SHOTGUN_WEIGHT;
@@ -175,8 +212,12 @@ void CShotgun::PrimaryAttack()
 		// HEV suit - indicate out of ammo condition
 		m_pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
 
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+	m_flPumpTime = gpGlobals->time + 0.5;
+#else
 	if (m_iClip != 0)
 		m_flPumpTime = gpGlobals->time + 0.5;
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 
 	m_flNextPrimaryAttack = GetNextAttackDelay(0.75);
 	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.75;
@@ -190,6 +231,7 @@ void CShotgun::PrimaryAttack()
 
 void CShotgun::SecondaryAttack( void )
 {
+#if !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 	// don't fire underwater
 	if (m_pPlayer->pev->waterlevel == 3)
 	{
@@ -261,6 +303,7 @@ void CShotgun::SecondaryAttack( void )
 
 	m_fInSpecialReload = 0;
 
+#endif // !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 }
 
 
@@ -319,6 +362,25 @@ void CShotgun::WeaponIdle( void )
 
 	if ( m_flPumpTime && m_flPumpTime < gpGlobals->time )
 	{
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+		// ==========================================
+		// Code changes for- Night at the Office:
+		// ==========================================
+		//
+		// -Shotgun. created from HL shotgun, removed secondary fire and 
+		//  changed value for maximum bullets in chamber. Also added new
+		//  function to enable shells to be ejected during the pumping
+		//  sequence, rather than straight away.
+
+		int flags;
+#if defined( CLIENT_WEAPONS )
+		flags = FEV_NOTHOST;
+#else
+		flags = 0;
+#endif
+		// Send eject animation.
+		PLAYBACK_EVENT(flags, m_pPlayer->edict(), m_usEject);
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 		// play pumping sound
 		EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM, "weapons/scock1.wav", 1, ATTN_NORM, 0, 95 + RANDOM_LONG(0,0x1f));
 		m_flPumpTime = 0;
@@ -332,7 +394,11 @@ void CShotgun::WeaponIdle( void )
 		}
 		else if (m_fInSpecialReload != 0)
 		{
+#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
+			if (m_iClip != SHOTGUN_MAX_CLIP && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType])
+#else
 			if (m_iClip != 8 && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType])
+#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 			{
 				Reload( );
 			}

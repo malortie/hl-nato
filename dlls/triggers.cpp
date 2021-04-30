@@ -37,6 +37,9 @@
 
 extern DLL_GLOBAL BOOL		g_fGameOver;
 
+#if defined ( NOFFICE_DLL )
+extern int gmsgCinematic;
+#endif // defined ( NOFFICE_DLL )
 extern void SetMovedir(entvars_t* pev);
 extern Vector VecBModelOrigin( entvars_t* pevBModel );
 
@@ -652,6 +655,55 @@ void CTriggerMonsterJump :: Touch( CBaseEntity *pOther )
 	pev->nextthink = gpGlobals->time;
 }
 
+#if defined ( NOFFICE_DLL )
+// ==========================================
+// Code changes for- Night at the Office:
+// ==========================================
+//
+// -Mp3 support.
+
+class CTargetFMODAudio : public CBaseTrigger
+{
+public:
+	void Spawn( void );
+	void PlaySong(CBaseEntity *pActivator, char* song);
+	void Touch(CBaseEntity *pOther);
+};
+
+LINK_ENTITY_TO_CLASS(trigger_mp3audio, CTargetFMODAudio);
+
+void CTargetFMODAudio::Spawn(void)
+{
+	InitTrigger();
+}
+
+void CTargetFMODAudio::Touch(CBaseEntity *pOther)
+{
+	if (!pOther || !pOther->IsPlayer()) // activator should be a player
+		return;
+
+	if (FStringNull(pev->target))
+	{
+		UTIL_Remove(this);
+		return;
+	}
+
+	PlaySong(pOther, (char*)STRING(pev->target));
+}
+
+void CTargetFMODAudio::PlaySong(CBaseEntity *pActivator, char* song)
+{
+	char command[64];
+
+	// Format new file name and path.
+	sprintf(command, "mp3 play media/%s\n", song);
+
+	CLIENT_COMMAND(pActivator->edict(), command);
+
+	SetTouch( NULL );
+	UTIL_Remove( this );
+}
+#endif // defined ( NOFFICE_DLL )
 
 //=====================================
 //
@@ -2074,7 +2126,62 @@ void CTriggerGravity::GravityTouch( CBaseEntity *pOther )
 
 
 
+#if defined ( NOFFICE_DLL )
+//===========================================================
+//LRC- trigger_startpatrol
+//===========================================================
+class CTriggerSetPatrol : public CBaseDelay
+{
+public:
+	void KeyValue( KeyValueData *pkvd );
+	void Spawn( void );
+	void Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
 
+	int ObjectCaps( void ) { return CBaseDelay::ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
+	virtual int		Save( CSave &save );
+	virtual int		Restore( CRestore &restore );
+
+	static	TYPEDESCRIPTION m_SaveData[];
+
+private:
+	int		m_iszPath;
+};
+LINK_ENTITY_TO_CLASS( trigger_startpatrol, CTriggerSetPatrol );
+
+TYPEDESCRIPTION	CTriggerSetPatrol::m_SaveData[] =
+{
+	DEFINE_FIELD( CTriggerSetPatrol, m_iszPath, FIELD_STRING ),
+};
+
+IMPLEMENT_SAVERESTORE(CTriggerSetPatrol,CBaseDelay);
+
+void CTriggerSetPatrol::KeyValue( KeyValueData *pkvd )
+{
+	if (FStrEq(pkvd->szKeyName, "m_iszPath"))
+	{
+		m_iszPath = ALLOC_STRING( pkvd->szValue );
+		pkvd->fHandled = TRUE;
+	}
+	else
+		CBaseDelay::KeyValue( pkvd );
+}
+
+void CTriggerSetPatrol::Spawn( void )
+{
+}
+
+void CTriggerSetPatrol::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
+{
+	CBaseEntity *pTarget = UTIL_FindEntityByTargetname( NULL, STRING( pev->target )/*, pActivator*/ );
+	CBaseEntity *pPath = UTIL_FindEntityByTargetname( NULL, STRING( m_iszPath )/*, pActivator*/ );
+
+	if (pTarget && pPath)
+	{
+		CBaseMonster *pMonster = pTarget->MyMonsterPointer();
+		if (pMonster) pMonster->StartPatrol(pPath);
+	}
+}
+#endif // defined ( NOFFICE_DLL )
 
 
 

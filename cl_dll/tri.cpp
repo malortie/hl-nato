@@ -55,6 +55,30 @@ void CL_DLLEXPORT HUD_DrawTransparentTriangles( void )
 	RunEventList();
 #endif
 
+#if defined ( NOFFICE_CLIENT_DLL )
+	gHUD.m_Glow.DrawGlow();
+#endif // defined ( NOFFICE_CLIENT_DLL )
 	if ( g_pParticleMan )
 		 g_pParticleMan->Update();
 }
+#if defined ( NOFFICE_CLIENT_DLL )
+//
+// Code adapted from tutorial written by Toni Sergi, aka - twlomega.
+//
+// http://twhl.info/articulator.php?art=114
+//
+
+/*
+=================
+HUD_DrawOrthoTriangles
+Orthogonal Triangles -- (relative to resolution,
+smackdab on the screen) add them here
+=================
+*/
+void HUD_DrawOrthoTriangles(void)
+{
+	gHUD.m_Health.DrawPain2();
+	gHUD.m_DeathVision.DrawDeathVision();
+	gHUD.m_Cinematic.DrawCinematic();
+}
+#endif // defined ( NOFFICE_CLIENT_DLL )

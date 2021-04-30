@@ -103,5 +103,18 @@ class CCineAI : public CCineMonster
 	virtual void FixScriptMonsterSchedule( CBaseMonster *pMonster );
 };
 
+#if defined ( NOFFICE_DLL )
+//=========================================================
+// Furniture - this is the cool comment I cut-and-pasted
+//=========================================================
+class CFurniture : public CBaseMonster
+{
+public:
+	void Spawn(void);
+	void Die(void);
+	int	 Classify(void);
+	virtual int	ObjectCaps(void) { return (CBaseMonster::ObjectCaps() & ~FCAP_ACROSS_TRANSITION); }
+};
+#endif // defined ( NOFFICE_DLL )
 
 #endif		//SCRIPTED_H
