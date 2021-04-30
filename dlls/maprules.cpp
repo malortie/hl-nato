@@ -160,7 +160,7 @@ void CGameScore::KeyValue( KeyValueData *pkvd )
 {
 	if (FStrEq(pkvd->szKeyName, "points"))
 	{
-		SetPoints( atoi(pkvd->szValue) );
+		SetPoints( std::atoi(pkvd->szValue) );
 		pkvd->fHandled = TRUE;
 	}
 	else
@@ -257,22 +257,22 @@ void CGameText::KeyValue( KeyValueData *pkvd )
 {
 	if (FStrEq(pkvd->szKeyName, "channel"))
 	{
-		m_textParms.channel = atoi( pkvd->szValue );
+		m_textParms.channel = std::atoi( pkvd->szValue );
 		pkvd->fHandled = TRUE;
 	}
 	else if (FStrEq(pkvd->szKeyName, "x"))
 	{
-		m_textParms.x = atof( pkvd->szValue );
+		m_textParms.x = std::atof( pkvd->szValue );
 		pkvd->fHandled = TRUE;
 	}
 	else if (FStrEq(pkvd->szKeyName, "y"))
 	{
-		m_textParms.y = atof( pkvd->szValue );
+		m_textParms.y = std::atof( pkvd->szValue );
 		pkvd->fHandled = TRUE;
 	}
 	else if (FStrEq(pkvd->szKeyName, "effect"))
 	{
-		m_textParms.effect = atoi( pkvd->szValue );
+		m_textParms.effect = std::atoi( pkvd->szValue );
 		pkvd->fHandled = TRUE;
 	}
 	else if (FStrEq(pkvd->szKeyName, "color"))
@@ -297,22 +297,22 @@ void CGameText::KeyValue( KeyValueData *pkvd )
 	}
 	else if (FStrEq(pkvd->szKeyName, "fadein"))
 	{
-		m_textParms.fadeinTime = atof( pkvd->szValue );
+		m_textParms.fadeinTime = std::atof( pkvd->szValue );
 		pkvd->fHandled = TRUE;
 	}
 	else if (FStrEq(pkvd->szKeyName, "fadeout"))
 	{
-		m_textParms.fadeoutTime = atof( pkvd->szValue );
+		m_textParms.fadeoutTime = std::atof( pkvd->szValue );
 		pkvd->fHandled = TRUE;
 	}
 	else if (FStrEq(pkvd->szKeyName, "holdtime"))
 	{
-		m_textParms.holdTime = atof( pkvd->szValue );
+		m_textParms.holdTime = std::atof( pkvd->szValue );
 		pkvd->fHandled = TRUE;
 	}
 	else if (FStrEq(pkvd->szKeyName, "fxtime"))
 	{
-		m_textParms.fxTime = atof( pkvd->szValue );
+		m_textParms.fxTime = std::atof( pkvd->szValue );
 		pkvd->fHandled = TRUE;
 	}
 	else
@@ -384,12 +384,12 @@ void CGameTeamMaster::KeyValue( KeyValueData *pkvd )
 {
 	if (FStrEq(pkvd->szKeyName, "teamindex"))
 	{
-		m_teamIndex = atoi( pkvd->szValue );
+		m_teamIndex = std::atoi( pkvd->szValue );
 		pkvd->fHandled = TRUE;
 	}
 	else if (FStrEq(pkvd->szKeyName, "triggerstate"))
 	{
-		int type = atoi( pkvd->szValue );
+		int type = std::atoi( pkvd->szValue );
 		switch( type )
 		{
 		case 0:
@@ -813,8 +813,8 @@ void CGamePlayerEquip::KeyValue( KeyValueData *pkvd )
 				UTIL_StripToken( pkvd->szKeyName, tmp );
 
 				m_weaponNames[i] = ALLOC_STRING(tmp);
-				m_weaponCount[i] = atoi(pkvd->szValue);
-				m_weaponCount[i] = max(1,m_weaponCount[i]);
+				m_weaponCount[i] = std::atoi(pkvd->szValue);
+				m_weaponCount[i] = std::max(1,m_weaponCount[i]);
 				pkvd->fHandled = TRUE;
 				break;
 			}
