@@ -73,18 +73,6 @@ int CHolster::GetItemInfo(ItemInfo *p)
 	return 1;
 }
 
-int CHolster::AddToPlayer(CBasePlayer *pPlayer)
-{
-	if (CBasePlayerWeapon::AddToPlayer(pPlayer))
-	{
-		MESSAGE_BEGIN(MSG_ONE, gmsgWeapPickup, NULL, pPlayer->pev);
-		WRITE_BYTE(m_iId);
-		MESSAGE_END();
-		return TRUE;
-	}
-	return FALSE;
-}
-
 BOOL CHolster::Deploy()
 {
 	return DefaultDeploy("models/v_holster.mdl", "models/p_holster.mdl", HOLSTER_DRAW, "holster");
