@@ -125,7 +125,7 @@ void CHudGlow::DrawGlow(void)
 		a = GLOW_MAX_ALPHA;
 	}
 
-	a = min(a, GLOW_MAX_ALPHA);
+	a = std::min(a, GLOW_MAX_ALPHA);
 
 	// gEngfuncs.Con_Printf("Glow opacity: %f.\n", a);
 
