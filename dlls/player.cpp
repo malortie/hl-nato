@@ -4852,7 +4852,7 @@ void CBasePlayer::UpdateStamina(void)
 		}
 
 		if (m_iStaminaLevel < STAMINA_LEVEL_LOW)
-			EMIT_SOUND_DYN(ENT(pev), CHAN_STATIC, "player/breathe2.wav", 0.15f, ATTN_NORM, SND_CHANGE_VOL | SND_CHANGE_PITCH, PITCH_NORM);
+			EMIT_SOUND_DYN(ENT(pev), CHAN_STATIC, "player/breathe2.wav", 0.3f, ATTN_NORM, SND_CHANGE_VOL | SND_CHANGE_PITCH, PITCH_NORM);
 		else
 			STOP_SOUND(ENT(pev), CHAN_STATIC, "player/breathe2.wav");
 	}
