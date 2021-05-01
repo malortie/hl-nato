@@ -313,6 +313,23 @@ void CTerrorist::Spawn()
 	// Prevent terrorist from using grenade launchers.
 	pev->weapons &= ~TERROR_GRENADELAUNCHER;
 
+	// Unspecified body.
+	if (pev->body == -1)
+	{
+		pev->body = 0; // Ensure to set a non negative value.
+
+		if (FBitSet(pev->weapons, TERROR_SHOTGUN))
+		{
+			// Shotgun terrorist appears to be always using 4th head model.
+			SetBodygroup(HEAD_GROUP, HEAD_M203);
+		}
+		else
+		{
+			// Set a random body.
+			SetBodygroup(HEAD_GROUP, RANDOM_LONG(HEAD_GRUNT, HEAD_M203));
+		}
+	}
+
 	if (FBitSet(pev->weapons, TERROR_SHOTGUN))
 	{
 		SetBodygroup(GUN_GROUP, GUN_SHOTGUN);
