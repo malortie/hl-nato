@@ -235,7 +235,7 @@ int CHudHealth::Draw(float flTime)
 
 		rc = *m_prc2;
 
-		rc.bottom -= m_iHeight * ((float)(100 - (min(100, m_iHealth))) * 0.01);	// health can go from 0 to 100 so * 0.01 goes from 0 to 1
+		rc.bottom -= m_iHeight * ((float)(100 - (std::min(100, m_iHealth))) * 0.01f);	// health can go from 0 to 100 so * 0.01 goes from 0 to 1
 
 		UnpackRGB(r, g, b, RGB_WHITEISH);
 
