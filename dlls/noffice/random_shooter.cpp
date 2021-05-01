@@ -115,6 +115,6 @@ void CRandomShooter::RandomThink(void)
 	}
 	else
 	{
-		pev->nextthink = gpGlobals->time;
+		pev->nextthink = gpGlobals->time + RANDOM_FLOAT(0.5f, 2.0f);
 	}
 }
