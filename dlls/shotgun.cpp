@@ -61,22 +61,7 @@ void CShotgun::Spawn( )
 	m_iId = WEAPON_SHOTGUN;
 	SET_MODEL(ENT(pev), "models/w_shotgun.mdl");
 
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
-	// ==========================================
-	// Code changes for- Night at the Office:
-	// ==========================================
-	//
-	// -Randomised Ammo. Picking up a gun from a fallen terrorist 
-	//  will not give you a pre-defined amount of bullets. The exact 
-	//  number is random (depending on the gun and clip size), which 
-	//  means the player will constantly need to keep a check on the 
-	//  ammo as it will no longer be 'comfortable' for the player to 
-	//  waste ammo.
-
-	m_iDefaultAmmo = DefaultAmmoBySkill( SHOTGUN_MAX_CLIP, gSkillData.iSkillLevel );
-#else
 	m_iDefaultAmmo = SHOTGUN_DEFAULT_GIVE;
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 
 	FallInit();// get ready to fall
 }
