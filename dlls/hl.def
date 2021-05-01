@@ -1,4 +1,4 @@
-LIBRARY hl
+LIBRARY nato
 EXPORTS
 	GiveFnptrsToDll			@1
 SECTIONS
