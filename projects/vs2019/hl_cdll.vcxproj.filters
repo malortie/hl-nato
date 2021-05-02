@@ -55,25 +55,19 @@
     <Filter Include="Source Files\_hl\cl_dll\hl">
       <UniqueIdentifier>{bd9d5958-4e67-4bff-bbd8-6ba6dfcdb720}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\cl_dll\noffice">
+      <UniqueIdentifier>{7334d60f-8c83-4049-a0d3-a119f853ac20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_hl\dlls\noffice">
+      <UniqueIdentifier>{83510880-b596-4b14-a6ce-d2ab93e108b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\dlls\crossbow.cpp">
-      <Filter>Source Files\_hl\dlls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\dlls\crowbar.cpp">
-      <Filter>Source Files\_hl\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\egon.cpp">
       <Filter>Source Files\_hl\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\cl_dll\ev_hldm.cpp">
       <Filter>Source Files\_hl\cl_dll</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\gauss.cpp">
-      <Filter>Source Files\_hl\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\handgrenade.cpp">
-      <Filter>Source Files\_hl\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\cl_dll\hl\hl_weapons.cpp">
       <Filter>Source Files\_hl\cl_dll\hl</Filter>
@@ -90,22 +84,10 @@
     <ClCompile Include="..\..\dlls\wpn_shared\hl_wpn_glock.cpp">
       <Filter>Source Files\_hl\dlls\wpn_shared</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dlls\squeakgrenade.cpp">
-      <Filter>Source Files\_hl\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\hornetgun.cpp">
-      <Filter>Source Files\_hl\dlls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\dlls\mp5.cpp">
       <Filter>Source Files\_hl\dlls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dlls\python.cpp">
-      <Filter>Source Files\_hl\dlls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\dlls\rpg.cpp">
-      <Filter>Source Files\_hl\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\satchel.cpp">
       <Filter>Source Files\_hl\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\shotgun.cpp">
@@ -305,6 +287,24 @@
     </ClCompile>
     <ClCompile Include="..\..\public\interface.cpp">
       <Filter>Source Files\public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cl_dll\noffice\cinematic.cpp">
+      <Filter>Source Files\cl_dll\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cl_dll\noffice\deathvision.cpp">
+      <Filter>Source Files\cl_dll\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cl_dll\noffice\glow.cpp">
+      <Filter>Source Files\cl_dll\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cl_dll\noffice\pain.cpp">
+      <Filter>Source Files\cl_dll\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\holster.cpp">
+      <Filter>Source Files\_hl\dlls\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\torch.cpp">
+      <Filter>Source Files\_hl\dlls\noffice</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

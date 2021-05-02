@@ -34,6 +34,9 @@
     <Filter Include="Header Files\pm_shared">
       <UniqueIdentifier>{37941113-16fa-4ce0-9bdd-a72a1ced8902}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\dlls\noffice">
+      <UniqueIdentifier>{d46cb8aa-7f33-4b6e-8b9d-c95e69d260a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\dlls\aflock.cpp">
@@ -87,9 +90,6 @@
     <ClCompile Include="..\..\dlls\controller.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dlls\crossbow.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\dlls\crowbar.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
@@ -103,9 +103,6 @@
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\effects.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\egon.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\explode.cpp">
@@ -127,9 +124,6 @@
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\gargantua.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\gauss.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\genericmonster.cpp">
@@ -156,9 +150,6 @@
     <ClCompile Include="..\..\dlls\h_export.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dlls\handgrenade.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\dlls\hassassin.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
@@ -178,9 +169,6 @@
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\hornet.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\hornetgun.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\houndeye.cpp">
@@ -252,9 +240,6 @@
     <ClCompile Include="..\..\pm_shared\pm_math.c">
       <Filter>Source Files\pm_shared</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dlls\python.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\dlls\rat.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
@@ -262,9 +247,6 @@
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\rpg.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\satchel.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\schedule.cpp">
@@ -295,9 +277,6 @@
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\squadmonster.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\squeakgrenade.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\subs.cpp">
@@ -341,6 +320,45 @@
     </ClCompile>
     <ClCompile Include="..\..\dlls\xen.cpp">
       <Filter>Source Files\dlls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\civilian.cpp">
+      <Filter>Source Files\dlls\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\clip.cpp">
+      <Filter>Source Files\dlls\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\dave.cpp">
+      <Filter>Source Files\dlls\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\female.cpp">
+      <Filter>Source Files\dlls\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\flashlightspot.cpp">
+      <Filter>Source Files\dlls\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\furniture_passable.cpp">
+      <Filter>Source Files\dlls\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\holster.cpp">
+      <Filter>Source Files\dlls\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\news.cpp">
+      <Filter>Source Files\dlls\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\player_freeze.cpp">
+      <Filter>Source Files\dlls\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\random_shake.cpp">
+      <Filter>Source Files\dlls\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\random_shooter.cpp">
+      <Filter>Source Files\dlls\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\terrorist.cpp">
+      <Filter>Source Files\dlls\noffice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\noffice\torch.cpp">
+      <Filter>Source Files\dlls\noffice</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -477,6 +495,18 @@
       <Filter>Header Files\dlls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\dlls\vector.h">
+      <Filter>Header Files\dlls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dlls\noffice\flashlightspot.h">
+      <Filter>Source Files\dlls\noffice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dlls\barney.h">
+      <Filter>Header Files\dlls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dlls\hgrunt.h">
+      <Filter>Header Files\dlls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dlls\scientist.h">
       <Filter>Header Files\dlls</Filter>
     </ClInclude>
   </ItemGroup>
