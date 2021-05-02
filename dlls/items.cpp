@@ -303,10 +303,12 @@ class CItemSecurity : public CItem
 #else
 		PRECACHE_MODEL ("models/w_security.mdl");
 #endif // defined ( NOFFICE_DLL )
+		PRECACHE_SOUND("items/9mmclip1.wav");
 	}
 	BOOL MyTouch( CBasePlayer *pPlayer )
 	{
 		pPlayer->m_rgItems[ITEM_SECURITY] += 1;
+		EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
 		return TRUE;
 	}
 };
