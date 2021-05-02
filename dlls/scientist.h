@@ -16,7 +16,6 @@
 #ifndef SCIENTIST_H
 #define SCIENTIST_H
 
-#if defined ( NOFFICE_DLL )
 //=======================================================
 // Scientist
 //=======================================================
@@ -84,5 +83,4 @@ public:
 	int	m_iPose;// which sequence to display
 	static char *m_szPoses[7];
 };
-#endif // defined ( NOFFICE_DLL )
 #endif // SCIENTIST_H

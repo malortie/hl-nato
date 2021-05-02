@@ -2058,7 +2058,6 @@ void CBaseMonster :: MonsterInitThink ( void )
 	StartMonster();
 }
 
-#if defined ( NOFFICE_DLL )
 void CBaseMonster :: StartPatrol ( CBaseEntity* path )
 {
 	m_pGoalEnt = path;
@@ -2090,7 +2089,6 @@ void CBaseMonster :: StartPatrol ( CBaseEntity* path )
 		ChangeSchedule( GetScheduleOfType( SCHED_IDLE_WALK ) );
 	}
 }
-#endif // defined ( NOFFICE_DLL )
 //=========================================================
 // StartMonster - final bit of initization before a monster 
 // is turned over to the AI. 
@@ -2124,9 +2122,6 @@ void CBaseMonster :: StartMonster ( void )
 		if (!WALK_MOVE ( ENT(pev), 0, 0, WALKMOVE_NORMAL ) )
 		{
 			ALERT(at_error, "Monster %s stuck in wall--level design error", STRING(pev->classname));
-#if !defined ( NOFFICE_DLL )
-			pev->effects = EF_BRIGHTFIELD;
-#endif // !defined ( NOFFICE_DLL )
 		}
 	}
 	else 
@@ -2134,54 +2129,10 @@ void CBaseMonster :: StartMonster ( void )
 		pev->flags &= ~FL_ONGROUND;
 	}
 	
-#if defined ( NOFFICE_DLL )
 	if ( !FStringNull(pev->target) )// this monster has a target
 	{
 		StartPatrol(UTIL_FindEntityByTargetname( NULL, STRING( pev->target )));
 	}
-#else
-	if ( !FStringNull(pev->target) )// this monster has a target
-	{
-		// Find the monster's initial target entity, stash it
-		m_pGoalEnt = CBaseEntity::Instance( FIND_ENTITY_BY_TARGETNAME ( NULL, STRING( pev->target ) ) );
-
-		if ( !m_pGoalEnt )
-		{
-			ALERT(at_error, "ReadyMonster()--%s couldn't find target %s", STRING(pev->classname), STRING(pev->target));
-		}
-		else
-		{
-			// Monster will start turning towards his destination
-			MakeIdealYaw ( m_pGoalEnt->pev->origin );
-
-			// JAY: How important is this error message?  Big Momma doesn't obey this rule, so I took it out.
-#if 0
-			// At this point, we expect only a path_corner as initial goal
-			if (!FClassnameIs( m_pGoalEnt->pev, "path_corner"))
-			{
-				ALERT(at_warning, "ReadyMonster--monster's initial goal '%s' is not a path_corner", STRING(pev->target));
-			}
-#endif
-
-			// set the monster up to walk a path corner path. 
-			// !!!BUGBUG - this is a minor bit of a hack.
-			// JAYJAY
-			m_movementGoal = MOVEGOAL_PATHCORNER;
-			
-			if ( pev->movetype == MOVETYPE_FLY )
-				m_movementActivity = ACT_FLY;
-			else
-				m_movementActivity = ACT_WALK;
-
-			if ( !FRefreshRoute() )
-			{
-				ALERT ( at_aiconsole, "Can't Create Route!\n" );
-			}
-			SetState( MONSTERSTATE_IDLE );
-			ChangeSchedule( GetScheduleOfType( SCHED_IDLE_WALK ) );
-		}
-	}
-#endif // defined ( NOFFICE_DLL )
 	
 	//SetState ( m_IdealMonsterState );
 	//SetActivity ( m_IdealActivity );

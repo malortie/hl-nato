@@ -31,7 +31,6 @@ LINK_ENTITY_TO_CLASS( weapon_crowbar, CCrowbar );
 
 
 enum gauss_e {
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	CROWBAR_IDLE = 0,
 	CROWBAR_DRAW,
 	CROWBAR_HOLSTER,
@@ -39,17 +38,6 @@ enum gauss_e {
 	CROWBAR_HOLD,
 	CROWBAR_RELEASEHIT,
 	CROWBAR_RELEASEMISS,
-#else
-	CROWBAR_IDLE = 0,
-	CROWBAR_DRAW,
-	CROWBAR_HOLSTER,
-	CROWBAR_ATTACK1HIT,
-	CROWBAR_ATTACK1MISS,
-	CROWBAR_ATTACK2MISS,
-	CROWBAR_ATTACK2HIT,
-	CROWBAR_ATTACK3MISS,
-	CROWBAR_ATTACK3HIT
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 };
 
 
@@ -88,11 +76,7 @@ int CCrowbar::GetItemInfo(ItemInfo *p)
 	p->iMaxAmmo2 = -1;
 	p->iMaxClip = WEAPON_NOCLIP;
 	p->iSlot = 0;
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	p->iPosition = 2;
-#else
-	p->iPosition = 0;
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	p->iId = WEAPON_CROWBAR;
 	p->iWeight = CROWBAR_WEIGHT;
 	return 1;
@@ -113,19 +97,15 @@ int CCrowbar::AddToPlayer(CBasePlayer *pPlayer)
 
 BOOL CCrowbar::Deploy( )
 {
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	m_flReleaseThrow = -1;
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	return DefaultDeploy( "models/v_crowbar.mdl", "models/p_crowbar.mdl", CROWBAR_DRAW, "crowbar" );
 }
 
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 BOOL CCrowbar::CanHolster(void)
 {
 	// can only holster crowbar when not primed!
 	return (m_flStartThrow == 0);
 }
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 void CCrowbar::Holster( int skiplocal /* = 0 */ )
 {
 	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.5;
@@ -180,7 +160,6 @@ void FindHullIntersection( const Vector &vecSrc, TraceResult &tr, float *mins, f
 
 void CCrowbar::PrimaryAttack()
 {
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	if ( !m_flStartThrow )
 	{
 		m_flStartThrow = gpGlobals->time;
@@ -193,13 +172,6 @@ void CCrowbar::PrimaryAttack()
 	{
 		SendWeaponAnim(  CROWBAR_HOLD );
 	}
-#else
-	if (! Swing( 1 ))
-	{
-		SetThink( &CCrowbar::SwingAgain );
-		pev->nextthink = gpGlobals->time + 0.1;
-	}
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 }
 
 
@@ -261,19 +233,7 @@ int CCrowbar::Swing( int fFirst )
 	}
 	else
 	{
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 		SendWeaponAnim( CROWBAR_RELEASEHIT );
-#else
-		switch( ((m_iSwing++) % 2) + 1 )
-		{
-		case 0:
-			SendWeaponAnim( CROWBAR_ATTACK1HIT ); break;
-		case 1:
-			SendWeaponAnim( CROWBAR_ATTACK2HIT ); break;
-		case 2:
-			SendWeaponAnim( CROWBAR_ATTACK3HIT ); break;
-		}
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 
 		// player "shoot" animation
 		m_pPlayer->SetAnimation( PLAYER_ATTACK1 );
@@ -358,11 +318,7 @@ int CCrowbar::Swing( int fFirst )
 
 		m_pPlayer->m_iWeaponVolume = flVol * CROWBAR_WALLHIT_VOLUME;
 #endif
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 		m_flNextPrimaryAttack = GetNextAttackDelay(0.5);
-#else
-		m_flNextPrimaryAttack = GetNextAttackDelay(0.25);
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 		
 		SetThink( &CCrowbar::Smack );
 		pev->nextthink = UTIL_WeaponTimeBase() + 0.2;
@@ -372,7 +328,6 @@ int CCrowbar::Swing( int fFirst )
 	return fDidHit;
 }
 
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 void CCrowbar::WeaponIdle( void )
 {
 	if ( m_flReleaseThrow == 0 && m_flStartThrow )
@@ -408,4 +363,3 @@ void CCrowbar::WeaponIdle( void )
 	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 35.0 / 13.0;
 	SendWeaponAnim( CROWBAR_IDLE );
 }
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )

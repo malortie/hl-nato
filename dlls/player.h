@@ -323,14 +323,12 @@ public:
 	
 	float m_flNextChatTime;
 	
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	void SwitchToFlashlight( void );
 
 	void UpdateStamina( void );
 	int m_iStaminaLevel;
 	float m_flStaminaStart;
 	BOOL m_bCinematicCompleted;
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 };
 
 #define AUTOAIM_2DEGREES  0.0348994967025

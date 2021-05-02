@@ -84,7 +84,6 @@ int CHudBattery:: MsgFunc_Battery(const char *pszName,  int iSize, void *pbuf )
 
 int CHudBattery::Draw(float flTime)
 {
-#if defined ( NOFFICE_CLIENT_DLL )
 	// ==========================================
 	// Code changes for- Night at the Office:
 	// ==========================================
@@ -92,7 +91,6 @@ int CHudBattery::Draw(float flTime)
 	// -Health. Removed HEV suit health, so player only has one health gauge
 
 	return 1;
-#endif // defined ( NOFFICE_CLIENT_DLL )
 	if ( gHUD.m_iHideHUDDisplay & HIDEHUD_HEALTH )
 		return 1;
 

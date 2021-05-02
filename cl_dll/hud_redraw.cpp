@@ -92,9 +92,7 @@ void CHud::Think(void)
 	Bench_CheckStart();
 }
 
-#if defined ( NOFFICE_CLIENT_DLL )
 void HUD_DrawOrthoTriangles(void);
-#endif // defined ( NOFFICE_CLIENT_DLL )
 // Redraw
 // step through the local data,  placing the appropriate graphics & text as appropriate
 // returns 1 if they've changed, 0 otherwise
@@ -179,10 +177,8 @@ int CHud :: Redraw( float flTime, int intermission )
 		}
 	}
 
-#if defined ( NOFFICE_CLIENT_DLL )
 	//omega;draw orthogonal triangles
 	HUD_DrawOrthoTriangles();
-#endif // defined ( NOFFICE_CLIENT_DLL )
 	// are we in demo mode? do we need to draw the logo in the top corner?
 	if (m_iLogo)
 	{
@@ -268,11 +264,7 @@ int CHud :: DrawHudNumber( int x, int y, int iFlags, int iNumber, int r, int g, 
 		{
 			 k = iNumber/100;
 			SPR_Set(GetSprite(m_HUD_number_0 + k), r, g, b );
-#if defined ( NOFFICE_CLIENT_DLL )
 			SPR_DrawHoles(0, x, y, &GetSpriteRect(m_HUD_number_0 + k));
-#else
-			SPR_DrawAdditive( 0, x, y, &GetSpriteRect(m_HUD_number_0 + k));
-#endif // defined ( NOFFICE_CLIENT_DLL )
 			x += iWidth;
 		}
 		else if (iFlags & (DHN_3DIGITS))
@@ -286,11 +278,7 @@ int CHud :: DrawHudNumber( int x, int y, int iFlags, int iNumber, int r, int g, 
 		{
 			k = (iNumber % 100)/10;
 			SPR_Set(GetSprite(m_HUD_number_0 + k), r, g, b );
-#if defined ( NOFFICE_CLIENT_DLL )
 			SPR_DrawHoles(0, x, y, &GetSpriteRect(m_HUD_number_0 + k));
-#else
-			SPR_DrawAdditive( 0, x, y, &GetSpriteRect(m_HUD_number_0 + k));
-#endif // defined ( NOFFICE_CLIENT_DLL )
 			x += iWidth;
 		}
 		else if (iFlags & (DHN_3DIGITS | DHN_2DIGITS))
@@ -302,11 +290,7 @@ int CHud :: DrawHudNumber( int x, int y, int iFlags, int iNumber, int r, int g, 
 		// SPR_Draw ones
 		k = iNumber % 10;
 		SPR_Set(GetSprite(m_HUD_number_0 + k), r, g, b );
-#if defined ( NOFFICE_CLIENT_DLL )
 		SPR_DrawHoles(0, x, y, &GetSpriteRect(m_HUD_number_0 + k));
-#else
-		SPR_DrawAdditive(0,  x, y, &GetSpriteRect(m_HUD_number_0 + k));
-#endif // defined ( NOFFICE_CLIENT_DLL )
 		x += iWidth;
 	} 
 	else if (iFlags & DHN_DRAWZERO) 
@@ -328,11 +312,7 @@ int CHud :: DrawHudNumber( int x, int y, int iFlags, int iNumber, int r, int g, 
 
 		// SPR_Draw ones
 		
-#if defined ( NOFFICE_CLIENT_DLL )
 		SPR_DrawHoles(0, x, y, &GetSpriteRect(m_HUD_number_0));
-#else
-		SPR_DrawAdditive( 0,  x, y, &GetSpriteRect(m_HUD_number_0));
-#endif // defined ( NOFFICE_CLIENT_DLL )
 		x += iWidth;
 	}
 

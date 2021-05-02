@@ -275,7 +275,6 @@ LINK_ENTITY_TO_CLASS( func_door, CBaseDoor );
 //
 LINK_ENTITY_TO_CLASS( func_water, CBaseDoor );
 
-#if defined ( NOFFICE_DLL )
 // ==========================================
 // Code changes for- Night at the Office:
 // ==========================================
@@ -288,7 +287,6 @@ LINK_ENTITY_TO_CLASS( func_water, CBaseDoor );
 // func_mist - same as a door. 
 //
 LINK_ENTITY_TO_CLASS(func_mist, CBaseDoor);
-#endif //  defined ( NOFFICE_DLL )
 
 void CBaseDoor::Spawn( )
 {

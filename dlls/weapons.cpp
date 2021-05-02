@@ -312,7 +312,6 @@ void W_Precache(void)
 	// custom items...
 
 	// common world objects
-#if defined ( NOFFICE_DLL )
 	UTIL_PrecacheOther( "item_suit" );
 	UTIL_PrecacheOther( "item_battery" );
 	UTIL_PrecacheOther( "item_antidote" );
@@ -339,80 +338,6 @@ void W_Precache(void)
 	// mp5
 	UTIL_PrecacheOtherWeapon( "weapon_9mmAR" );
 	UTIL_PrecacheOther( "ammo_9mmAR" );
-#else
-	UTIL_PrecacheOther( "item_suit" );
-	UTIL_PrecacheOther( "item_battery" );
-	UTIL_PrecacheOther( "item_antidote" );
-	UTIL_PrecacheOther( "item_security" );
-	UTIL_PrecacheOther( "item_longjump" );
-
-	// shotgun
-	UTIL_PrecacheOtherWeapon( "weapon_shotgun" );
-	UTIL_PrecacheOther( "ammo_buckshot" );
-
-	// crowbar
-	UTIL_PrecacheOtherWeapon( "weapon_crowbar" );
-
-	// glock
-	UTIL_PrecacheOtherWeapon( "weapon_9mmhandgun" );
-	UTIL_PrecacheOther( "ammo_9mmclip" );
-
-	// mp5
-	UTIL_PrecacheOtherWeapon( "weapon_9mmAR" );
-	UTIL_PrecacheOther( "ammo_9mmAR" );
-	UTIL_PrecacheOther( "ammo_ARgrenades" );
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// python
-	UTIL_PrecacheOtherWeapon( "weapon_357" );
-	UTIL_PrecacheOther( "ammo_357" );
-#endif
-	
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// gauss
-	UTIL_PrecacheOtherWeapon( "weapon_gauss" );
-	UTIL_PrecacheOther( "ammo_gaussclip" );
-#endif
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// rpg
-	UTIL_PrecacheOtherWeapon( "weapon_rpg" );
-	UTIL_PrecacheOther( "ammo_rpgclip" );
-#endif
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// crossbow
-	UTIL_PrecacheOtherWeapon( "weapon_crossbow" );
-	UTIL_PrecacheOther( "ammo_crossbow" );
-#endif
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// egon
-	UTIL_PrecacheOtherWeapon( "weapon_egon" );
-#endif
-
-	// tripmine
-	UTIL_PrecacheOtherWeapon( "weapon_tripmine" );
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// satchel charge
-	UTIL_PrecacheOtherWeapon( "weapon_satchel" );
-#endif
-
-	// hand grenade
-	UTIL_PrecacheOtherWeapon("weapon_handgrenade");
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// squeak grenade
-	UTIL_PrecacheOtherWeapon( "weapon_snark" );
-#endif
-
-#if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
-	// hornetgun
-	UTIL_PrecacheOtherWeapon( "weapon_hornetgun" );
-#endif
-
-#endif // defined ( NOFFICE_DLL )
 
 #if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
 	if ( g_pGameRules->IsDeathmatch() )
@@ -449,9 +374,7 @@ void W_Precache(void)
 	
 	PRECACHE_SOUND ("items/weapondrop1.wav");// weapon falls to the ground
 
-#if defined ( NOFFICE_DLL )
 	PRECACHE_MODEL("models/w_grenade.mdl");
-#endif // defined ( NOFFICE_DLL )
 }
 
 
@@ -486,10 +409,8 @@ TYPEDESCRIPTION	CBasePlayerWeapon::m_SaveData[] =
 	DEFINE_FIELD( CBasePlayerWeapon, m_iDefaultAmmo, FIELD_INTEGER ),
 //	DEFINE_FIELD( CBasePlayerWeapon, m_iClientClip, FIELD_INTEGER )	 , reset to zero on load so hud gets updated correctly
 //  DEFINE_FIELD( CBasePlayerWeapon, m_iClientWeaponState, FIELD_INTEGER ), reset to zero on load so hud gets updated correctly
-#if defined ( NOFFICE_DLL )
 	DEFINE_FIELD(CBasePlayerWeapon, m_iszClipModel, FIELD_STRING),
 	DEFINE_FIELD(CBasePlayerWeapon, m_flDropClipTime, FIELD_TIME),
-#endif // defined ( NOFFICE_DLL )
 };
 
 IMPLEMENT_SAVERESTORE( CBasePlayerWeapon, CBasePlayerItem );
@@ -681,7 +602,6 @@ void CBasePlayerWeapon::ItemPostFrame( void )
 	if ((m_fInReload) && ( m_pPlayer->m_flNextAttack <= UTIL_WeaponTimeBase() ) )
 	{
 		// complete the reload. 
-#if defined ( NOFFICE_DLL )
 		int remainingAmmunition = m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType];
 
 		// ==========================================
@@ -704,13 +624,6 @@ void CBasePlayerWeapon::ItemPostFrame( void )
 			m_iClip = iMaxClip();
 			m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] -= m_iClip; // Remove an entire clip.
 		}
-#else
-		int j = std::min( iMaxClip() - m_iClip, m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType]);	
-
-		// Add them to the clip
-		m_iClip += j;
-		m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] -= j;
-#endif // defined ( NOFFICE_DLL )
 
 		m_pPlayer->TabulateAmmo();
 
@@ -1085,13 +998,11 @@ BOOL CBasePlayerWeapon :: DefaultReload( int iClipSize, int iAnim, float fDelay,
 	m_fInReload = TRUE;
 
 	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 3;
-#if defined ( NOFFICE_DLL )
 	// Drop an instance of current weapon clip on the ground.
 	if (!FStringNull(GetClipModel()))
 	{
 		m_flDropClipTime = gpGlobals->time + GetDropClipDelay();
 	}
-#endif // defined ( NOFFICE_DLL )
 	return TRUE;
 }
 
@@ -1289,7 +1200,6 @@ float CBasePlayerWeapon::GetNextAttackDelay( float delay )
 }
 
 
-#if defined ( NOFFICE_DLL )
 void CBasePlayerWeapon::ItemPostFrame_Always(void)
 {
 	// Check if it is time to drop the clip.
@@ -1369,7 +1279,6 @@ void CBasePlayerWeapon::DropClip(void)
 	pClip->pev->owner = edict();
 	pClip->pev->avelocity = Vector(RANDOM_FLOAT(200, 400), RANDOM_FLOAT(200, 400), 0);
 }
-#endif // defined ( NOFFICE_DLL )
 //*********************************************************
 // weaponbox code:
 //*********************************************************

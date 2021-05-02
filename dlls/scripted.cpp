@@ -1201,17 +1201,6 @@ BOOL CScriptedSentence :: StartSentence( CBaseMonster *pTarget )
 //=========================================================
 // Furniture - this is the cool comment I cut-and-pasted
 //=========================================================
-#if !defined ( NOFFICE_DLL )
-class CFurniture : public CBaseMonster
-{
-public:
-	void Spawn ( void );
-	void Die( void );
-	int	 Classify ( void );
-	virtual int	ObjectCaps( void ) { return (CBaseMonster :: ObjectCaps() & ~FCAP_ACROSS_TRANSITION); }
-};
-
-#endif // !defined ( NOFFICE_DLL )
 
 LINK_ENTITY_TO_CLASS( monster_furniture, CFurniture );
 

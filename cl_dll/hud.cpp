@@ -330,10 +330,8 @@ void CHud :: Init( void )
 	default_fov = CVAR_CREATE( "default_fov", "90", 0 );
 	m_pCvarStealMouse = CVAR_CREATE( "hud_capturemouse", "1", FCVAR_ARCHIVE );
 	m_pCvarDraw = CVAR_CREATE( "hud_draw", "1", FCVAR_ARCHIVE );
-#if defined ( NOFFICE_CLIENT_DLL )
 	m_pCvarNewHud = CVAR_CREATE("hud_newhud", "1", FCVAR_ARCHIVE);
 	m_pCvarShowCrosshair = CVAR_CREATE("hud_showcrosshair", "0", FCVAR_ARCHIVE);
-#endif // defined ( NOFFICE_CLIENT_DLL )
 	cl_lw = gEngfuncs.pfnGetCvarPointer( "cl_lw" );
 
 	m_pSpriteList = NULL;
@@ -368,11 +366,9 @@ void CHud :: Init( void )
 	m_AmmoSecondary.Init();
 	m_TextMessage.Init();
 	m_StatusIcons.Init();
-#if defined ( NOFFICE_CLIENT_DLL )
 	m_Cinematic.Init();
 	m_Glow.Init();
 	m_DeathVision.Init();
-#endif // defined ( NOFFICE_CLIENT_DLL )
 	GetClientVoiceMgr()->Init(&g_VoiceStatusHelper, (vgui::Panel**)&gViewPort);
 
 	m_Menu.Init();
@@ -522,11 +518,9 @@ void CHud :: VidInit( void )
 	m_AmmoSecondary.VidInit();
 	m_TextMessage.VidInit();
 	m_StatusIcons.VidInit();
-#if defined ( NOFFICE_CLIENT_DLL )
 	m_Cinematic.VidInit();
 	m_Glow.VidInit();
 	m_DeathVision.VidInit();
-#endif // defined ( NOFFICE_CLIENT_DLL )
 	GetClientVoiceMgr()->VidInit();
 }
 

@@ -1491,9 +1491,7 @@ void CBaseEntity::FireBullets(ULONG cShots, Vector vecSrc, Vector vecDirShooting
 		UTIL_BubbleTrail( vecSrc, tr.vecEndPos, (flDistance * tr.flFraction) / 64.0 );
 	}
 	ApplyMultiDamage(pev, pevAttacker);
-#if defined ( NOFFICE_DLL )
 	MuzzleLight(vecSrc, 200, 255, 255, 255, 0.1f, 0);
-#endif // defined ( NOFFICE_DLL )
 }
 
 
@@ -1585,9 +1583,7 @@ Vector CBaseEntity::FireBulletsPlayer ( ULONG cShots, Vector vecSrc, Vector vecD
 	}
 	ApplyMultiDamage(pev, pevAttacker);
 
-#if defined ( NOFFICE_DLL )
 	MuzzleLight(vecSrc, 200, 255, 255, 255, 0.1f, 0);
-#endif // defined ( NOFFICE_DLL )
 	return Vector( x * vecSpread.x, y * vecSpread.y, 0.0 );
 }
 
@@ -1710,7 +1706,6 @@ void CBaseMonster :: MakeDamageBloodDecal ( int cCount, float flNoise, TraceResu
 		}
 	}
 }
-#if defined ( NOFFICE_DLL )
 // ==========================================
 // Code changes for- Night at the Office:
 // ==========================================
@@ -1737,4 +1732,3 @@ void CBaseEntity::MuzzleLight(Vector vecSrc, float flRadius, byte r, byte g, byt
 		WRITE_BYTE( iDecay );	// decay * 0.1
 	MESSAGE_END( );
 }
-#endif // defined ( NOFFICE_DLL )

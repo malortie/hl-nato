@@ -117,11 +117,9 @@ TYPEDESCRIPTION	CBasePlayer::m_playerSaveData[] =
 	DEFINE_FIELD( CBasePlayer, m_pTank, FIELD_EHANDLE ),
 	DEFINE_FIELD( CBasePlayer, m_iHideHUD, FIELD_INTEGER ),
 	DEFINE_FIELD( CBasePlayer, m_iFOV, FIELD_INTEGER ),
-#if defined ( NOFFICE_DLL )
 	DEFINE_FIELD( CBasePlayer, m_flStaminaStart, FIELD_TIME ),
 	DEFINE_FIELD( CBasePlayer, m_iStaminaLevel, FIELD_INTEGER ),
 	DEFINE_FIELD( CBasePlayer, m_bCinematicCompleted, FIELD_BOOLEAN),
-#endif // defined ( NOFFICE_DLL )
 	
 	//DEFINE_FIELD( CBasePlayer, m_fDeadTime, FIELD_FLOAT ), // only used in multiplayer games
 	//DEFINE_FIELD( CBasePlayer, m_fGameHUDInitialized, FIELD_INTEGER ), // only used in multiplayer games
@@ -193,11 +191,9 @@ int gmsgTeamNames = 0;
 int gmsgStatusText = 0;
 int gmsgStatusValue = 0; 
 
-#if defined ( NOFFICE_DLL )
 int gmsgCinematic = 0;
 int gmsgGlow = 0;
 int gmsgDeathVision = 0;
-#endif // defined ( NOFFICE_DLL )
 
 
 void LinkUserMessages( void )
@@ -246,11 +242,9 @@ void LinkUserMessages( void )
 	gmsgStatusText = REG_USER_MSG("StatusText", -1);
 	gmsgStatusValue = REG_USER_MSG("StatusValue", 3); 
 
-#if defined ( NOFFICE_DLL )
 	gmsgCinematic = REG_USER_MSG("Cinematic", 1);
 	gmsgGlow = REG_USER_MSG("Glow", 1);
 	gmsgDeathVision = REG_USER_MSG("DeathVision", 1);
-#endif // defined ( NOFFICE_DLL )
 }
 
 LINK_ENTITY_TO_CLASS( player, CBasePlayer );
@@ -941,7 +935,6 @@ void CBasePlayer::Killed( entvars_t *pevAttacker, int iGib )
 
 
 	// UNDONE: Put this in, but add FFADE_PERMANENT and make fade time 8.8 instead of 4.12
-#if defined ( NOFFICE_DLL )
 	// ==========================================
 	// Code changes for- Night at the Office:
 	// ==========================================
@@ -957,9 +950,6 @@ void CBasePlayer::Killed( entvars_t *pevAttacker, int iGib )
 	MESSAGE_BEGIN(MSG_ONE, gmsgDeathVision, NULL, pev);
 		WRITE_BYTE(0);
 	MESSAGE_END();
-#else
-	// UTIL_ScreenFade( edict(), Vector(128,0,0), 6, 15, 255, FFADE_OUT | FFADE_MODULATE );
-#endif
 
 	if ( ( pev->health < -40 && iGib != GIB_NEVER ) || iGib == GIB_ALWAYS )
 	{
@@ -1167,9 +1157,7 @@ void CBasePlayer::TabulateAmmo()
 	ammo_rockets = AmmoInventory( GetAmmoIndex( "rockets" ) );
 	ammo_uranium = AmmoInventory( GetAmmoIndex( "uranium" ) );
 	ammo_hornets = AmmoInventory( GetAmmoIndex( "Hornets" ) );
-#if defined ( NOFFICE_DLL )
 	ammo_ak47 = AmmoInventory( GetAmmoIndex( "ak47" ) );
-#endif // defined ( NOFFICE_DLL )
 }
 
 
@@ -2018,9 +2006,7 @@ void CBasePlayer::PreThink(void)
 	{
 		pev->velocity = g_vecZero;
 	}
-#if defined ( NOFFICE_DLL )
 	UpdateStamina();
-#endif
 }
 /* Time based Damage works as follows: 
 	1) There are several types of timebased damage:
@@ -2387,9 +2373,7 @@ void CBasePlayer::SetSuitUpdate(char *name, int fgroup, int iNoRepeatTime)
 		return;
 	}
 
-#if defined ( NOFFICE_DLL )
 	return;
-#endif // defined ( NOFFICE_DLL )
 	// if name == NULL, then clear out the queue
 
 	if (!name)
@@ -2979,11 +2963,9 @@ void CBasePlayer::Spawn( void )
 	
 	m_flNextChatTime = gpGlobals->time;
 
-#if defined ( NOFFICE_DLL )
 	m_flStaminaStart = 0;
 	m_iStaminaLevel = 100;
 	m_bCinematicCompleted = FALSE;
-#endif // defined ( NOFFICE_DLL )
 	g_pGameRules->PlayerSpawn( this );
 }
 
@@ -3110,10 +3092,8 @@ int CBasePlayer::Restore( CRestore &restore )
 	m_flNextAttack = UTIL_WeaponTimeBase();
 #endif
 
-#if defined ( NOFFICE_DLL )
 	// Do not draw cinematic after loading.
 	m_bCinematicCompleted = TRUE;
-#endif // defined ( NOFFICE_DLL )
 	return status;
 }
 
@@ -3414,9 +3394,7 @@ BOOL CBasePlayer :: FlashlightIsOn( void )
 
 void CBasePlayer :: FlashlightTurnOn( void )
 {
-#if defined ( NOFFICE_DLL )
 	return;
-#endif // defined ( NOFFICE_DLL )
 	if ( !g_pGameRules->FAllowFlashlight() )
 	{
 		return;
@@ -3439,9 +3417,7 @@ void CBasePlayer :: FlashlightTurnOn( void )
 
 void CBasePlayer :: FlashlightTurnOff( void )
 {
-#if defined ( NOFFICE_DLL )
 	return;
-#endif // defined ( NOFFICE_DLL )
 	EMIT_SOUND_DYN( ENT(pev), CHAN_WEAPON, SOUND_FLASHLIGHT_OFF, 1.0, ATTN_NORM, 0, PITCH_NORM );
     ClearBits(pev->effects, EF_DIMLIGHT);
 	MESSAGE_BEGIN( MSG_ONE, gmsgFlashlight, NULL, pev );
@@ -3519,7 +3495,6 @@ void CBasePlayer::ImpulseCommands( )
 		break;
 		}
 	case 100:
-#if defined ( NOFFICE_DLL )
 	{
 		// If the player has the torch and is not using it,
 		// requested to turn on the flashlight,
@@ -3529,17 +3504,6 @@ void CBasePlayer::ImpulseCommands( )
 			SwitchToFlashlight();
 		}
 	}
-#else
-        // temporary flashlight for level designers
-        if ( FlashlightIsOn() )
-		{
-			FlashlightTurnOff();
-		}
-        else 
-		{
-			FlashlightTurnOn();
-		}
-#endif // defined ( NOFFICE_DLL )
 		break;
 
 	case	201:// paint decal
@@ -3604,7 +3568,6 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 
 	case 101:
 		gEvilImpulse101 = TRUE;
-#if defined ( NOFFICE_DLL )
 		GiveNamedItem( "item_suit" );
 		GiveNamedItem("weapon_holster");
 		GiveNamedItem("weapon_torch");
@@ -3615,34 +3578,6 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 		GiveNamedItem( "ammo_buckshot" );
 		GiveNamedItem( "weapon_9mmAR" );
 		GiveNamedItem( "ammo_9mmAR" );
-#else
-		GiveNamedItem( "item_suit" );
-		GiveNamedItem( "item_battery" );
-		GiveNamedItem( "weapon_crowbar" );
-		GiveNamedItem( "weapon_9mmhandgun" );
-		GiveNamedItem( "ammo_9mmclip" );
-		GiveNamedItem( "weapon_shotgun" );
-		GiveNamedItem( "ammo_buckshot" );
-		GiveNamedItem( "weapon_9mmAR" );
-		GiveNamedItem( "ammo_9mmAR" );
-		GiveNamedItem( "ammo_ARgrenades" );
-		GiveNamedItem( "weapon_handgrenade" );
-		GiveNamedItem( "weapon_tripmine" );
-#ifndef OEM_BUILD
-		GiveNamedItem( "weapon_357" );
-		GiveNamedItem( "ammo_357" );
-		GiveNamedItem( "weapon_crossbow" );
-		GiveNamedItem( "ammo_crossbow" );
-		GiveNamedItem( "weapon_egon" );
-		GiveNamedItem( "weapon_gauss" );
-		GiveNamedItem( "ammo_gaussclip" );
-		GiveNamedItem( "weapon_rpg" );
-		GiveNamedItem( "ammo_rpgclip" );
-		GiveNamedItem( "weapon_satchel" );
-		GiveNamedItem( "weapon_snark" );
-		GiveNamedItem( "weapon_hornetgun" );
-#endif
-#endif // defined ( NOFFICE_DLL )
 		gEvilImpulse101 = FALSE;
 		break;
 
@@ -3949,7 +3884,6 @@ void CBasePlayer::ItemPostFrame()
 	if ( m_pTank != NULL )
 		return;
 
-#if defined ( NOFFICE_DLL )
 	if (m_pActiveItem)
 	{
 		CBasePlayerWeapon*pWeapon = (CBasePlayerWeapon*)m_pActiveItem;
@@ -3959,7 +3893,6 @@ void CBasePlayer::ItemPostFrame()
 		if (pWeapon)
 			pWeapon->ItemPostFrame_Always();
 	}
-#endif // defined ( NOFFICE_DLL )
 #if defined( CLIENT_WEAPONS )
     if ( m_flNextAttack > 0 )
 #else
@@ -4092,7 +4025,6 @@ void CBasePlayer :: UpdateClientData( void )
 	// HACKHACK -- send the message to display the game title
 	if (gDisplayTitle)
 	{
-#if defined ( NOFFICE_DLL )
 		if (!m_bCinematicCompleted)
 		{
 			// ==========================================
@@ -4114,11 +4046,6 @@ void CBasePlayer :: UpdateClientData( void )
 			// Only do this once.
 			m_bCinematicCompleted = TRUE;
 		}
-#else
-		MESSAGE_BEGIN( MSG_ONE, gmsgShowGameTitle, NULL, pev );
-		WRITE_BYTE( 0 );
-		MESSAGE_END();
-#endif // defined ( NOFFICE_DLL )
 		gDisplayTitle = 0;
 	}
 
@@ -4782,7 +4709,6 @@ BOOL CBasePlayer :: SwitchWeapon( CBasePlayerItem *pWeapon )
 	return TRUE;
 }
 
-#if defined ( NOFFICE_DLL )
 // ==========================================
 // Code changes for- Night at the Office:
 // ==========================================
@@ -4869,7 +4795,6 @@ void CBasePlayer::SwitchToFlashlight(void)
 		}
 	}
 }
-#endif // defined ( NOFFICE_DLL )
 //=========================================================
 // Dead HEV suit prop
 //=========================================================
@@ -4953,7 +4878,6 @@ void CStripWeapons :: Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TY
 		pPlayer = (CBasePlayer *)CBaseEntity::Instance( g_engfuncs.pfnPEntityOfEntIndex( 1 ) );
 	}
 
-#if defined ( NOFFICE_DLL )
 	if ( pPlayer )
 	{
 		if ( FStrEq(STRING(gpGlobals->mapname), "f16a") && FStrEq(STRING(pev->targetname),"strip" ) )
@@ -4965,10 +4889,6 @@ void CStripWeapons :: Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TY
 			pPlayer->RemoveAllItems(FALSE);
 		}
 	}
-#else
-	if ( pPlayer )
-		pPlayer->RemoveAllItems( FALSE );
-#endif // defined ( NOFFICE_DLL )
 }
 
 

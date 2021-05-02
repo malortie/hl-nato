@@ -1344,31 +1344,6 @@ void CSprite::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useTy
 }
 
 
-#if !defined ( NOFFICE_DLL )
-class CGibShooter : public CBaseDelay
-{
-public:
-	void	Spawn( void );
-	void	Precache( void );
-	void	KeyValue( KeyValueData *pkvd );
-	void EXPORT ShootThink( void );
-	void Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
-
-	virtual CGib *CreateGib( void );
-
-	virtual int		Save( CSave &save );
-	virtual int		Restore( CRestore &restore );
-	static	TYPEDESCRIPTION m_SaveData[];
-
-	int	m_iGibs;
-	int m_iGibCapacity;
-	int m_iGibMaterial;
-	int m_iGibModelIndex;
-	float m_flGibVelocity;
-	float m_flVariance;
-	float m_flGibLife;
-};
-#endif // !defined ( NOFFICE_DLL )
 
 TYPEDESCRIPTION CGibShooter::m_SaveData[] =
 {
@@ -1525,15 +1500,6 @@ void CGibShooter :: ShootThink ( void )
 }
 
 
-#if !defined ( NOFFICE_DLL )
-class CEnvShooter : public CGibShooter
-{
-	void		Precache( void );
-	void		KeyValue( KeyValueData *pkvd );
-
-	CGib		*CreateGib( void );
-};
-#endif // !defined ( NOFFICE_DLL )
 
 LINK_ENTITY_TO_CLASS( env_shooter, CEnvShooter );
 
@@ -1836,26 +1802,6 @@ void CBlood::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useTyp
 
 
 // Screen shake
-#if !defined ( NOFFICE_DLL )
-class CShake : public CPointEntity
-{
-public:
-	void	Spawn( void );
-	void	Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
-	void	KeyValue( KeyValueData *pkvd );
-
-	inline	float	Amplitude( void ) { return pev->scale; }
-	inline	float	Frequency( void ) { return pev->dmg_save; }
-	inline	float	Duration( void ) { return pev->dmg_take; }
-	inline	float	Radius( void ) { return pev->dmg; }
-
-	inline	void	SetAmplitude( float amplitude ) { pev->scale = amplitude; }
-	inline	void	SetFrequency( float frequency ) { pev->dmg_save = frequency; }
-	inline	void	SetDuration( float duration ) { pev->dmg_take = duration; }
-	inline	void	SetRadius( float radius ) { pev->dmg = radius; }
-private:
-};
-#endif // !defined ( NOFFICE_DLL )
 
 LINK_ENTITY_TO_CLASS( env_shake, CShake );
 

@@ -27,7 +27,6 @@
 #define VECTOR_CONE_DM_DOUBLESHOTGUN Vector( 0.17365, 0.04362, 0.00 ) // 20 degrees by 5 degrees
 
 enum shotgun_e {
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	SHOTGUN_IDLE = 0,
 	SHOTGUN_FIRE,
 	SHOTGUN_EJECT,
@@ -39,18 +38,6 @@ enum shotgun_e {
 	SHOTGUN_HOLSTER,
 	SHOTGUN_IDLE4,
 	SHOTGUN_IDLE_DEEP
-#else
-	SHOTGUN_IDLE = 0,
-	SHOTGUN_FIRE,
-	SHOTGUN_FIRE2,
-	SHOTGUN_RELOAD,
-	SHOTGUN_PUMP,
-	SHOTGUN_START_RELOAD,
-	SHOTGUN_DRAW,
-	SHOTGUN_HOLSTER,
-	SHOTGUN_IDLE4,
-	SHOTGUN_IDLE_DEEP
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 };
 
 LINK_ENTITY_TO_CLASS( weapon_shotgun, CShotgun );
@@ -91,9 +78,7 @@ void CShotgun::Precache( void )
 
 	m_usSingleFire = PRECACHE_EVENT( 1, "events/shotgun1.sc" );
 	m_usDoubleFire = PRECACHE_EVENT( 1, "events/shotgun2.sc" );
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	m_usEject = PRECACHE_EVENT(1, "events/shotgunx.sc");
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 }
 
 int CShotgun::AddToPlayer( CBasePlayer *pPlayer )
@@ -117,13 +102,8 @@ int CShotgun::GetItemInfo(ItemInfo *p)
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = -1;
 	p->iMaxClip = SHOTGUN_MAX_CLIP;
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	p->iSlot = 0;
 	p->iPosition = 5;
-#else
-	p->iSlot = 2;
-	p->iPosition = 1;
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	p->iFlags = 0;
 	p->iId = m_iId = WEAPON_SHOTGUN;
 	p->iWeight = SHOTGUN_WEIGHT;
@@ -197,12 +177,7 @@ void CShotgun::PrimaryAttack()
 		// HEV suit - indicate out of ammo condition
 		m_pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
 
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 	m_flPumpTime = gpGlobals->time + 0.5;
-#else
-	if (m_iClip != 0)
-		m_flPumpTime = gpGlobals->time + 0.5;
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 
 	m_flNextPrimaryAttack = GetNextAttackDelay(0.75);
 	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.75;
@@ -216,79 +191,6 @@ void CShotgun::PrimaryAttack()
 
 void CShotgun::SecondaryAttack( void )
 {
-#if !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
-	// don't fire underwater
-	if (m_pPlayer->pev->waterlevel == 3)
-	{
-		PlayEmptySound( );
-		m_flNextPrimaryAttack = GetNextAttackDelay(0.15);
-		return;
-	}
-
-	if (m_iClip <= 1)
-	{
-		Reload( );
-		PlayEmptySound( );
-		return;
-	}
-
-	m_pPlayer->m_iWeaponVolume = LOUD_GUN_VOLUME;
-	m_pPlayer->m_iWeaponFlash = NORMAL_GUN_FLASH;
-
-	m_iClip -= 2;
-
-
-	int flags;
-#if defined( CLIENT_WEAPONS )
-	flags = FEV_NOTHOST;
-#else
-	flags = 0;
-#endif
-
-	m_pPlayer->pev->effects = (int)(m_pPlayer->pev->effects) | EF_MUZZLEFLASH;
-
-	// player "shoot" animation
-	m_pPlayer->SetAnimation( PLAYER_ATTACK1 );
-
-	Vector vecSrc	 = m_pPlayer->GetGunPosition( );
-	Vector vecAiming = m_pPlayer->GetAutoaimVector( AUTOAIM_5DEGREES );
-
-	Vector vecDir;
-	
-#ifdef CLIENT_DLL
-	if ( bIsMultiplayer() )
-#else
-	if ( g_pGameRules->IsMultiplayer() )
-#endif
-	{
-		// tuned for deathmatch
-		vecDir = m_pPlayer->FireBulletsPlayer( 8, vecSrc, vecAiming, VECTOR_CONE_DM_DOUBLESHOTGUN, 2048, BULLET_PLAYER_BUCKSHOT, 0, 0, m_pPlayer->pev, m_pPlayer->random_seed );
-	}
-	else
-	{
-		// untouched default single player
-		vecDir = m_pPlayer->FireBulletsPlayer( 12, vecSrc, vecAiming, VECTOR_CONE_10DEGREES, 2048, BULLET_PLAYER_BUCKSHOT, 0, 0, m_pPlayer->pev, m_pPlayer->random_seed );
-	}
-		
-	PLAYBACK_EVENT_FULL( flags, m_pPlayer->edict(), m_usDoubleFire, 0.0, (float *)&g_vecZero, (float *)&g_vecZero, vecDir.x, vecDir.y, 0, 0, 0, 0 );
-
-	if (!m_iClip && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0)
-		// HEV suit - indicate out of ammo condition
-		m_pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
-
-	if (m_iClip != 0)
-		m_flPumpTime = gpGlobals->time + 0.95;
-
-	m_flNextPrimaryAttack = GetNextAttackDelay(1.5);
-	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 1.5;
-	if (m_iClip != 0)
-		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 6.0;
-	else
-		m_flTimeWeaponIdle = 1.5;
-
-	m_fInSpecialReload = 0;
-
-#endif // !defined ( NOFFICE_DLL ) && !defined ( NOFFICE_CLIENT_DLL )
 }
 
 
@@ -347,7 +249,6 @@ void CShotgun::WeaponIdle( void )
 
 	if ( m_flPumpTime && m_flPumpTime < gpGlobals->time )
 	{
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 		// ==========================================
 		// Code changes for- Night at the Office:
 		// ==========================================
@@ -365,7 +266,6 @@ void CShotgun::WeaponIdle( void )
 #endif
 		// Send eject animation.
 		PLAYBACK_EVENT(flags, m_pPlayer->edict(), m_usEject);
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 		// play pumping sound
 		EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM, "weapons/scock1.wav", 1, ATTN_NORM, 0, 95 + RANDOM_LONG(0,0x1f));
 		m_flPumpTime = 0;
@@ -379,11 +279,7 @@ void CShotgun::WeaponIdle( void )
 		}
 		else if (m_fInSpecialReload != 0)
 		{
-#if defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 			if (m_iClip != SHOTGUN_MAX_CLIP && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType])
-#else
-			if (m_iClip != 8 && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType])
-#endif // defined ( NOFFICE_DLL ) || defined ( NOFFICE_CLIENT_DLL )
 			{
 				Reload( );
 			}

@@ -344,12 +344,10 @@ void CBasePlayerAmmo :: DefaultTouch( CBaseEntity *pOther ) { }
 int CBasePlayerWeapon::ExtractAmmo( CBasePlayerWeapon *pWeapon ) { return 0; }
 int CBasePlayerWeapon::ExtractClipAmmo( CBasePlayerWeapon *pWeapon ) { return 0; }	
 void CBasePlayerWeapon::RetireWeapon( void ) { }
-#if defined ( NOFFICE_CLIENT_DLL )
 void CBasePlayerWeapon::ItemPostFrame_Always(void) { }
 int CBasePlayerWeapon::DefaultAmmoBySkill(int iMaxClip, int iSkillLevel) { return 0; }
 string_t CBasePlayerWeapon::GetClipModel() const { return 0; }
 void CBasePlayerWeapon::SetClipModel(const char* szModel) { }
 void CBasePlayerWeapon::DropClip(void) { }
-#endif // defined ( NOFFICE_CLIENT_DLL )
 void CSoundEnt::InsertSound ( int iType, const Vector &vecOrigin, int iVolume, float flDuration ) {}
 void RadiusDamage( Vector vecSrc, entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, float flRadius, int iClassIgnore, int bitsDamageType ){}

@@ -16,7 +16,6 @@
 #ifndef BARNEY_H
 #define BARNEY_H
 
-#if defined ( NOFFICE_DLL )
 class CBarney : public CTalkMonster
 {
 public:
@@ -64,5 +63,4 @@ public:
 
 	CUSTOM_SCHEDULES;
 };
-#endif // defined ( NOFFICE_DLL )
 #endif // BARNEY_H

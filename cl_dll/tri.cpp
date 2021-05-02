@@ -55,13 +55,10 @@ void CL_DLLEXPORT HUD_DrawTransparentTriangles( void )
 	RunEventList();
 #endif
 
-#if defined ( NOFFICE_CLIENT_DLL )
 	gHUD.m_Glow.DrawGlow();
-#endif // defined ( NOFFICE_CLIENT_DLL )
 	if ( g_pParticleMan )
 		 g_pParticleMan->Update();
 }
-#if defined ( NOFFICE_CLIENT_DLL )
 //
 // Code adapted from tutorial written by Toni Sergi, aka - twlomega.
 //
@@ -81,4 +78,3 @@ void HUD_DrawOrthoTriangles(void)
 	gHUD.m_DeathVision.DrawDeathVision();
 	gHUD.m_Cinematic.DrawCinematic();
 }
-#endif // defined ( NOFFICE_CLIENT_DLL )

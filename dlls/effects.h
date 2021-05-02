@@ -206,7 +206,6 @@ public:
 	Vector  m_firePosition;
 };
 
-#if defined ( NOFFICE_DLL )
 // Screen shake
 class CShake : public CPointEntity
 {
@@ -255,13 +254,10 @@ public:
 
 class CEnvShooter : public CGibShooter
 {
-#if defined ( NOFFICE_DLL )
 public:
-#endif
 	void		Precache(void);
 	void		KeyValue(KeyValueData *pkvd);
 
 	CGib		*CreateGib(void);
 };
-#endif // defined ( NOFFICE_DLL )
 #endif		//EFFECTS_H

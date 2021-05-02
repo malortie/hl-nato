@@ -74,10 +74,8 @@ void EV_SnarkFire( struct event_args_s *args  );
 
 
 void EV_TrainPitchAdjust( struct event_args_s *args );
-#if defined ( NOFFICE_CLIENT_DLL )
 void EV_Torch(struct event_args_s *args);
 void EV_FireShotGunX(struct event_args_s *args);
-#endif // defined ( NOFFICE_CLIENT_DLL )
 }
 
 #define VECTOR_CONE_1DEGREES Vector( 0.00873, 0.00873, 0.00873 )
@@ -576,11 +574,7 @@ void EV_FireShotGunDouble( event_args_t *args )
 	{
 		// Add muzzle flash to current weapon model
 		EV_MuzzleFlash();
-#if defined ( NOFFICE_CLIENT_DLL )
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( SHOTGUN_FIRE, 2 );
-#else
-		gEngfuncs.pEventAPI->EV_WeaponAnimation( SHOTGUN_FIRE2, 2 );
-#endif // defined ( NOFFICE_CLIENT_DLL )
 		V_PunchAxis( 0, -10.0 );
 	}
 
@@ -608,7 +602,6 @@ void EV_FireShotGunDouble( event_args_t *args )
 
 void EV_FireShotGunSingle( event_args_t *args )
 {
-#if defined ( NOFFICE_CLIENT_DLL )
 	int idx;
 	vec3_t origin;
 	vec3_t angles;
@@ -639,56 +632,6 @@ void EV_FireShotGunSingle( event_args_t *args )
 	VectorCopy( forward, vecAiming );
 
 	EV_HLDM_FireBullets( idx, forward, right, up, 6, vecSrc, vecAiming, 2048, BULLET_PLAYER_BUCKSHOT, 0, &tracerCount[idx-1], 0.08716, 0.08716 );
-#else
-	int idx;
-	vec3_t origin;
-	vec3_t angles;
-	vec3_t velocity;
-	
-	vec3_t ShellVelocity;
-	vec3_t ShellOrigin;
-	int shell;
-	vec3_t vecSrc, vecAiming;
-	vec3_t vecSpread;
-	vec3_t up, right, forward;
-	float flSpread = 0.01;
-
-	idx = args->entindex;
-	VectorCopy( args->origin, origin );
-	VectorCopy( args->angles, angles );
-	VectorCopy( args->velocity, velocity );
-
-	AngleVectors( angles, forward, right, up );
-
-	shell = gEngfuncs.pEventAPI->EV_FindModelIndex ("models/shotgunshell.mdl");// brass shell
-
-	if ( EV_IsLocal( idx ) )
-	{
-		// Add muzzle flash to current weapon model
-		EV_MuzzleFlash();
-		gEngfuncs.pEventAPI->EV_WeaponAnimation( SHOTGUN_FIRE, 2 );
-
-		V_PunchAxis( 0, -5.0 );
-	}
-
-	EV_GetDefaultShellInfo( args, origin, velocity, ShellVelocity, ShellOrigin, forward, right, up, 32, -12, 6 );
-
-	EV_EjectBrass ( ShellOrigin, ShellVelocity, angles[ YAW ], shell, TE_BOUNCE_SHOTSHELL ); 
-
-	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/sbarrel1.wav", gEngfuncs.pfnRandomFloat(0.95, 1.0), ATTN_NORM, 0, 93 + gEngfuncs.pfnRandomLong( 0, 0x1f ) );
-
-	EV_GetGunPosition( args, vecSrc, origin );
-	VectorCopy( forward, vecAiming );
-
-	if ( gEngfuncs.GetMaxClients() > 1 )
-	{
-		EV_HLDM_FireBullets( idx, forward, right, up, 4, vecSrc, vecAiming, 2048, BULLET_PLAYER_BUCKSHOT, 0, &tracerCount[idx-1], 0.08716, 0.04362 );
-	}
-	else
-	{
-		EV_HLDM_FireBullets( idx, forward, right, up, 6, vecSrc, vecAiming, 2048, BULLET_PLAYER_BUCKSHOT, 0, &tracerCount[idx-1], 0.08716, 0.08716 );
-	}
-#endif // defined ( NOFFICE_CLIENT_DLL )
 }
 //======================
 //	   SHOTGUN END
@@ -1164,7 +1107,6 @@ void EV_FireGauss( event_args_t *args )
 //======================
 
 enum crowbar_e {
-#if defined ( NOFFICE_CLIENT_DLL )
 	CROWBAR_IDLE = 0,
 	CROWBAR_DRAW,
 	CROWBAR_HOLSTER,
@@ -1172,17 +1114,6 @@ enum crowbar_e {
 	CROWBAR_HOLD,
 	CROWBAR_RELEASEHIT,
 	CROWBAR_RELEASEMISS,
-#else
-	CROWBAR_IDLE = 0,
-	CROWBAR_DRAW,
-	CROWBAR_HOLSTER,
-	CROWBAR_ATTACK1HIT,
-	CROWBAR_ATTACK1MISS,
-	CROWBAR_ATTACK2MISS,
-	CROWBAR_ATTACK2HIT,
-	CROWBAR_ATTACK3MISS,
-	CROWBAR_ATTACK3HIT
-#endif // defined ( NOFFICE_CLIENT_DLL )
 };
 
 int g_iSwing;
@@ -1204,21 +1135,7 @@ void EV_Crowbar( event_args_t *args )
 
 	if ( EV_IsLocal( idx ) )
 	{
-#if defined ( NOFFICE_CLIENT_DLL )
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( CROWBAR_RELEASEMISS, 1 );
-#else
-		gEngfuncs.pEventAPI->EV_WeaponAnimation( CROWBAR_ATTACK1MISS, 1 );
-
-		switch( (g_iSwing++) % 3 )
-		{
-			case 0:
-				gEngfuncs.pEventAPI->EV_WeaponAnimation ( CROWBAR_ATTACK1MISS, 1 ); break;
-			case 1:
-				gEngfuncs.pEventAPI->EV_WeaponAnimation ( CROWBAR_ATTACK2MISS, 1 ); break;
-			case 2:
-				gEngfuncs.pEventAPI->EV_WeaponAnimation ( CROWBAR_ATTACK3MISS, 1 ); break;
-		}
-#endif // defined ( NOFFICE_CLIENT_DLL )
 	}
 }
 //======================
@@ -1758,7 +1675,6 @@ int EV_TFC_IsAllyTeam( int iTeam1, int iTeam2 )
 	return 0;
 }
 
-#if defined ( NOFFICE_CLIENT_DLL )
 //======================
 //	   TORCH START
 //======================
@@ -1849,4 +1765,3 @@ void EV_FireShotGunX(struct event_args_s *args)
 //======================
 //	  SHOTGUNX END
 //======================
-#endif // defined ( NOFFICE_CLIENT_DLL )

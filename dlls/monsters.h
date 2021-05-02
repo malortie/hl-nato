@@ -161,7 +161,6 @@ public:
 	float	m_lifeTime;
 };
 
-#if defined ( NOFFICE_DLL )
 class CWeaponClip : public CGib
 {
 public:
@@ -169,7 +168,6 @@ public:
 	void EXPORT WaitTillLand(void);
 	void EXPORT ClipTouch(CBaseEntity *pOther);
 };
-#endif // defined ( NOFFICE_DLL )
 
 #define CUSTOM_SCHEDULES\
 		virtual Schedule_t *ScheduleFromName( const char *pName );\

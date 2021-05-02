@@ -37,9 +37,7 @@
 
 extern DLL_GLOBAL BOOL		g_fGameOver;
 
-#if defined ( NOFFICE_DLL )
 extern int gmsgCinematic;
-#endif // defined ( NOFFICE_DLL )
 extern void SetMovedir(entvars_t* pev);
 extern Vector VecBModelOrigin( entvars_t* pevBModel );
 
@@ -655,7 +653,6 @@ void CTriggerMonsterJump :: Touch( CBaseEntity *pOther )
 	pev->nextthink = gpGlobals->time;
 }
 
-#if defined ( NOFFICE_DLL )
 // ==========================================
 // Code changes for- Night at the Office:
 // ==========================================
@@ -703,7 +700,6 @@ void CTargetFMODAudio::PlaySong(CBaseEntity *pActivator, char* song)
 	SetTouch( NULL );
 	UTIL_Remove( this );
 }
-#endif // defined ( NOFFICE_DLL )
 
 //=====================================
 //
@@ -2126,7 +2122,6 @@ void CTriggerGravity::GravityTouch( CBaseEntity *pOther )
 
 
 
-#if defined ( NOFFICE_DLL )
 //===========================================================
 //LRC- trigger_startpatrol
 //===========================================================
@@ -2181,7 +2176,6 @@ void CTriggerSetPatrol::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_
 		if (pMonster) pMonster->StartPatrol(pPath);
 	}
 }
-#endif // defined ( NOFFICE_DLL )
 
 
 

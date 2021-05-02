@@ -16,7 +16,6 @@
 #ifndef HGRUNT_H
 #define HGRUNT_H
 
-#if defined ( NOFFICE_DLL )
 //=========================================================
 // monster-specific schedule types
 //=========================================================
@@ -76,13 +75,8 @@ public:
 	int Restore( CRestore &restore );
 	
 	CBaseEntity	*Kick( void );
-#if defined ( NOFFICE_DLL )
 	virtual Schedule_t	*GetSchedule(void);
 	virtual Schedule_t  *GetScheduleOfType ( int Type );
-#else
-	Schedule_t	*GetSchedule( void );
-	Schedule_t  *GetScheduleOfType ( int Type );
-#endif // defined ( NOFFICE_DLL )
 	void TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType);
 	int TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int bitsDamageType );
 
@@ -132,5 +126,4 @@ public:
 	int	m_iPose;// which sequence to display	-- temporary, don't need to save
 	static char *m_szPoses[3];
 };
-#endif // defined ( NOFFICE_DLL )
 #endif // HGRUNT_H
