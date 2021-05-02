@@ -4104,18 +4104,7 @@ void CBasePlayer :: UpdateClientData( void )
 			//  is stuck into position, to give a cinematic feel to the opening sequence.
 			//  So the player wont think he is genuinely stuck into the environment.
 
-			int duration			= 0;
-
-			// training level.
-			if (FStrEq(STRING(gpGlobals->mapname), "trn1"))
-			{
-				duration			= 34;
-			}
-			// start level.
-			else if (FStrEq(STRING(gpGlobals->mapname), "f14"))
-			{
-				duration			= 41;
-			}
+			int duration			= 34;
 
 			// Tell client to show cinematic bars.
 			MESSAGE_BEGIN(MSG_ONE, gmsgCinematic, NULL, pev);
