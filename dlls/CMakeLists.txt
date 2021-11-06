@@ -50,6 +50,7 @@ set(LINK_OPTS_RELEASE
 # Include directories
 set(INCLUDE_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}
+  ${NOFFICE_DLLS_DIR}
   ${ENGINE_DIR}
   ${COMMON_DIR}
   ${PM_SHARED_DIR}
@@ -62,6 +63,7 @@ set(HEADER_FILES
   activity.h
   activitymap.h
   animation.h
+  barney.h
   basemonster.h
   cbase.h
   cdll_dll.h
@@ -76,6 +78,7 @@ set(HEADER_FILES
   flyingmonster.h
   func_break.h
   gamerules.h
+  hgrunt.h
   hornet.h
   items.h
   monsterevent.h
@@ -85,6 +88,7 @@ set(HEADER_FILES
   player.h
   saverestore.h
   schedule.h
+  scientist.h
   scripted.h
   scriptevent.h
   skill.h
@@ -105,6 +109,7 @@ set(HEADER_FILES
   ${PM_SHARED_DIR}/pm_movevars.h
   ${PM_SHARED_DIR}/pm_shared.h
   ${MOD_CONFIG_FILE_PATH}
+  ${NOFFICE_DLLS_FOLDER}/flashlightspot.h
 )
 
 # Source files
@@ -126,12 +131,12 @@ set(SOURCE_FILES
   client.cpp
   combat.cpp
   controller.cpp
-  crossbow.cpp
+#  crossbow.cpp
   crowbar.cpp
   defaultai.cpp
   doors.cpp
   effects.cpp
-  egon.cpp
+#  egon.cpp
   explode.cpp
   flyingmonster.cpp
   func_break.cpp
@@ -139,18 +144,18 @@ set(SOURCE_FILES
   game.cpp
   gamerules.cpp
   gargantua.cpp
-  gauss.cpp
+#  gauss.cpp
   genericmonster.cpp
   ggrenade.cpp
   globals.cpp
   gman.cpp
-  handgrenade.cpp
+#  handgrenade.cpp
   hassassin.cpp
   headcrab.cpp
   healthkit.cpp
   hgrunt.cpp
   hornet.cpp
-  hornetgun.cpp
+#  hornetgun.cpp
   houndeye.cpp
   h_ai.cpp
   h_battery.cpp
@@ -177,11 +182,11 @@ set(SOURCE_FILES
   plane.cpp
   plats.cpp
   player.cpp
-  python.cpp
+#  python.cpp
   rat.cpp
   roach.cpp
   rpg.cpp
-  satchel.cpp
+#  satchel.cpp
   schedule.cpp
   scientist.cpp
   scripted.cpp
@@ -192,7 +197,7 @@ set(SOURCE_FILES
   soundent.cpp
   spectator.cpp
   squadmonster.cpp
-  squeakgrenade.cpp
+#  squeakgrenade.cpp
   subs.cpp
   talkmonster.cpp
   teamplay_gamerules.cpp
@@ -208,6 +213,19 @@ set(SOURCE_FILES
   xen.cpp
   zombie.cpp
   ${GAME_SHARED_DIR}/voice_gamemgr.cpp
+  ${NOFFICE_DLLS_FOLDER}/civilian.cpp
+  ${NOFFICE_DLLS_FOLDER}/clip.cpp
+  ${NOFFICE_DLLS_FOLDER}/dave.cpp
+  ${NOFFICE_DLLS_FOLDER}/female.cpp
+  ${NOFFICE_DLLS_FOLDER}/flashlightspot.cpp
+  ${NOFFICE_DLLS_FOLDER}/furniture_passable.cpp
+  ${NOFFICE_DLLS_FOLDER}/holster.cpp
+  ${NOFFICE_DLLS_FOLDER}/news.cpp
+  ${NOFFICE_DLLS_FOLDER}/player_freeze.cpp
+  ${NOFFICE_DLLS_FOLDER}/random_shake.cpp
+  ${NOFFICE_DLLS_FOLDER}/random_shooter.cpp
+  ${NOFFICE_DLLS_FOLDER}/terrorist.cpp
+  ${NOFFICE_DLLS_FOLDER}/torch.cpp
 )
 
 set(PM_SHARED_SOURCE_FILES

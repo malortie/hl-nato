@@ -47,7 +47,9 @@ set(LINK_OPTS_RELEASE
 # Include directories
 set(INCLUDE_DIRS 
   ${DLLS_DIR}
+  ${NOFFICE_DLLS_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}
+  ${NOFFICE_CL_DLL_DIR}
   ${PUBLIC_DIR}
   ${COMMON_DIR}
   ${PM_SHARED_DIR}
@@ -161,18 +163,18 @@ set(SOURCE_FILES
   view.cpp
   voice_status.cpp
   ${COMMON_DIR}/parsemsg.cpp
-  ${DLLS_DIR}/crossbow.cpp
+#  ${DLLS_DIR}/crossbow.cpp
   ${DLLS_DIR}/crowbar.cpp
-  ${DLLS_DIR}/egon.cpp
-  ${DLLS_DIR}/gauss.cpp
-  ${DLLS_DIR}/handgrenade.cpp
-  ${DLLS_DIR}/hornetgun.cpp
+#  ${DLLS_DIR}/egon.cpp
+#  ${DLLS_DIR}/gauss.cpp
+#  ${DLLS_DIR}/handgrenade.cpp
+#  ${DLLS_DIR}/hornetgun.cpp
   ${DLLS_DIR}/mp5.cpp
-  ${DLLS_DIR}/python.cpp
+#  ${DLLS_DIR}/python.cpp
   ${DLLS_DIR}/rpg.cpp
-  ${DLLS_DIR}/satchel.cpp
+#  ${DLLS_DIR}/satchel.cpp
   ${DLLS_DIR}/shotgun.cpp
-  ${DLLS_DIR}/squeakgrenade.cpp
+#  ${DLLS_DIR}/squeakgrenade.cpp
   ${DLLS_DIR}/tripmine.cpp
   ${DLLS_DIR}/wpn_shared/hl_wpn_glock.cpp
   ${GAME_SHARED_DIR}/vgui_checkbutton2.cpp
@@ -184,6 +186,12 @@ set(SOURCE_FILES
   ${GAME_SHARED_DIR}/vgui_slider2.cpp
   ${GAME_SHARED_DIR}/voice_banmgr.cpp
   ${PUBLIC_DIR}/interface.cpp
+  ${NOFFICE_DLLS_FOLDER}/cinematic.cpp
+  ${NOFFICE_DLLS_FOLDER}/deathvision.cpp
+  ${NOFFICE_DLLS_FOLDER}/glow.cpp
+  ${NOFFICE_DLLS_FOLDER}/pain.cpp
+  ${NOFFICE_DLLS_DIR}/holster.cpp
+  ${NOFFICE_DLLS_DIR}/torch.cpp
 )
 
 set(PM_SHARED_SOURCE_FILES
