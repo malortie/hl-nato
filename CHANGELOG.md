@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [noffice/1.0.1] - 2021-05-02
+## [1.0.1] - 2021-11-07
 
 ### Added
 
@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shotgun and Glock now give a fixed amount of ammo on spawn
 - Removed precache of ammo_ARgrenades entity
 
-## [noffice/1.0.0] - 2016-01-25
+## [1.0.0] - 2016-01-25
 
 ### Added
 
