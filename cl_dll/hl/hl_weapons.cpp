@@ -866,7 +866,7 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 
 	if ( player.m_pActiveItem->m_iId == WEAPON_MP5 )
 	{
-		from->client.vuser2[ 1 ] = player.ammo_ak47;
+		to->client.vuser2[ 1 ] = player.ammo_ak47;
 	}
 
 	// Make sure that weapon animation matches what the game .dll is telling us
